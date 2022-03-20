@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">MobileTimetable</string>
+
+    <string-array name="programming_languages">
+      <item>test1</item>
+      <item>test2</item>
+      <item>test3</item>
+    </string-array>
+
+  <string-array name="description">
+    <item>description1</item>
+    <item>description2</item>
+    <item>description3</item>
+  </string-array>
+
 </resources>

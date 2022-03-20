@@ -1,6 +1,8 @@
 package com.cats.mobiletimetable;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
@@ -16,13 +18,29 @@ public class MainActivity extends AppCompatActivity {
 
     Calendar myCalendar= Calendar.getInstance();
     EditText dateSelectEditText;
+    RecyclerView timetableList;
+
+    String s1[], s2[];
+    int images[] = {};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        dateSelectEditText=findViewById(R.id.dateEditText);
+
+        //TODO Для деста работы с RecyclerView, потом сделать лучше
+        s1 = getResources().getStringArray(R.array.programming_languages);
+        s2 = getResources().getStringArray(R.array.description);
+
+        TimetableAdapter timetableAdapter = new TimetableAdapter(this, s1, s2);
+
+        dateSelectEditText = findViewById(R.id.dateEditText);
+        timetableList = findViewById(R.id.timetableList);
+
+        timetableList.setAdapter(timetableAdapter);
+        timetableList.setLayoutManager(new LinearLayoutManager(this));
+
 
         //Обработка активности с выбором даты
         DatePickerDialog.OnDateSetListener date =new DatePickerDialog.OnDateSetListener() {
