@@ -3,7 +3,7 @@ package com.cats.mobiletimetable.db.tables;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity
+@Entity(tableName = "groups")
 public class Group {
 
     @PrimaryKey(autoGenerate = true)

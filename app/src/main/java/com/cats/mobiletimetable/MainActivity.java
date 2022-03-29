@@ -7,40 +7,32 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cats.mobiletimetable.adapters.LessonListAdapter;
+import com.cats.mobiletimetable.db.AppDatabase;
+import com.cats.mobiletimetable.db.relations.LessonWithDetails;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
     Calendar myCalendar = Calendar.getInstance();
     EditText dateSelectEditText;
-    RecyclerView timetableList;
-
-    String s1[], s2[];
-    int images[] = {};
+    RecyclerView timetableRecyclerView;
+    private LessonListAdapter lessonListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        //TODO Для деста работы с RecyclerView, потом сделать лучше
-        s1 = getResources().getStringArray(R.array.programming_languages);
-        s2 = getResources().getStringArray(R.array.description);
-
-        TimetableAdapter timetableAdapter = new TimetableAdapter(this, s1, s2);
-
         dateSelectEditText = findViewById(R.id.dateEditText);
-        timetableList = findViewById(R.id.timetableList);
-
-        timetableList.setAdapter(timetableAdapter);
-        timetableList.setLayoutManager(new LinearLayoutManager(this));
-
 
         //Обработка активности с выбором даты
         DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -61,6 +53,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        initRecycleView();
+        loadRecordList();
+
+    }
+
+    private void initRecycleView() {
+
+        timetableRecyclerView = findViewById(R.id.timetableRecyclerView);
+        timetableRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        timetableRecyclerView.addItemDecoration(dividerItemDecoration);
+        lessonListAdapter = new LessonListAdapter(this);
+        timetableRecyclerView.setAdapter(lessonListAdapter);
+
+    }
+
+    private void loadRecordList() {
+        AppDatabase db = AppDatabase.getDbInstance(getApplicationContext());
+        List<LessonWithDetails> recordList = db.lessonDao().getAllLessonsWithDetails();
+        lessonListAdapter.setLessonList(recordList);
     }
 
     private void updateLabel() {
