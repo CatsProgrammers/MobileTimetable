@@ -1,7 +1,6 @@
 package com.cats.mobiletimetable;
 
 import android.content.Context;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ public class TimetableAdapter extends RecyclerView.Adapter<TimetableAdapter.MyVi
     Context context;
 
 
-    public TimetableAdapter(Context ct, String s1[], String s2[]){
+    public TimetableAdapter(Context ct, String s1[], String s2[]) {
         data1 = s1;
         data2 = s2;
         context = ct;
@@ -29,7 +28,7 @@ public class TimetableAdapter extends RecyclerView.Adapter<TimetableAdapter.MyVi
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.list_view_item, parent,false);
+        View view = inflater.inflate(R.layout.list_view_item, parent, false);
         return new MyViewHolder(view);
 
     }
@@ -45,9 +44,10 @@ public class TimetableAdapter extends RecyclerView.Adapter<TimetableAdapter.MyVi
         return data1.length;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder{
+    public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView timetable_title, timetable_place;
+
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
