@@ -3,6 +3,7 @@ package com.cats.mobiletimetable.db.dao;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.cats.mobiletimetable.db.tables.Teacher;
@@ -15,8 +16,19 @@ public interface TeacherDao {
     @Query("SELECT * FROM teachers;")
     List<Teacher> getAllTeachers();
 
-    @Insert()
-    void insertTeacher(Teacher... teachers);
+    @Query("SELECT * FROM teachers WHERE id=:id;")
+    Teacher getTeacherById(String id);
+
+    @Query("SELECT * FROM teachers WHERE name=:name;")
+    Teacher getTeacherByName(String name);
+
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    Long insertTeacher(Teacher teacher);
+
+    // Insert multiple items
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    List<Long> insertTeacher(Teacher... teachers);
 
     @Delete
     void deleteTeacher(Teacher teacher);

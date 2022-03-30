@@ -13,10 +13,10 @@ public class Lesson {
     public String name;
 
     @ColumnInfo(name = "begin_lesson")
-    public Long beginLesson;
+    public String beginLesson;
 
     @ColumnInfo(name = "end_lesson")
-    public Long endLesson;
+    public String endLesson;
 
     public String url;
 
@@ -27,5 +27,5 @@ public class Lesson {
     public Long buildingId;
 
     @ColumnInfo(name = "kind_of_work_id")
-    public Long kindOfWordId;
+    public Long kindOfWorkId;
 }

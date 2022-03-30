@@ -11,11 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cats.mobiletimetable.R;
-import com.cats.mobiletimetable.Utils;
 import com.cats.mobiletimetable.db.relations.LessonWithDetails;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 
@@ -50,8 +47,8 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
         //TODO: глянуть, то ли отображается - нужно отображать аудиторию
         holder.place.setText(currentLesson.building.label);
         holder.teacher.setText(currentLesson.teacher.name);
-        holder.timeBegin.setText(Utils.unixTimeToString(currentLesson.lesson.beginLesson));
-        holder.timeEnd.setText(Utils.unixTimeToString(currentLesson.lesson.endLesson));
+        holder.timeBegin.setText(currentLesson.lesson.beginLesson);
+        holder.timeEnd.setText(currentLesson.lesson.endLesson);
 
         //TODO: выставить lessonType в ImageView
 

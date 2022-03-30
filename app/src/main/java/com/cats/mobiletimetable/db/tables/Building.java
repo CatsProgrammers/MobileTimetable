@@ -11,6 +11,4 @@ public class Building {
 
     public String label;
 
-    public String address;
-
 }

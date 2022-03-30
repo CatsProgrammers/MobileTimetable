@@ -6,7 +6,6 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Transaction;
 
-
 import com.cats.mobiletimetable.db.relations.LessonWithDetails;
 import com.cats.mobiletimetable.db.tables.Lesson;
 
@@ -27,4 +26,7 @@ public interface LessonDao {
 
     @Delete
     void deleteLesson(Lesson lesson);
+
+    @Query("DELETE FROM lessons")
+    void deleteAll();
 }

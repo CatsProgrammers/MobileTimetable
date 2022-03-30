@@ -1,5 +1,6 @@
 package com.cats.mobiletimetable.db.tables;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -9,7 +10,10 @@ public class Group {
     @PrimaryKey(autoGenerate = true)
     public Long id;
 
-    public String label;
+    @ColumnInfo(name = "label_id")
+    public String labelId;
+
+    public String name;
 
     public String type;
 

@@ -1,14 +1,22 @@
 package com.cats.mobiletimetable;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Utils {
 
-    public static String unixTimeToString(Long unixTime){
-        Date date = new Date();
-        date.setTime(unixTime * 1000);
-        SimpleDateFormat formatter = new SimpleDateFormat("hh:mm");
-        return formatter.format(date);
+
+    public static String getCurrentDateString() {
+
+        LocalDate localDate = LocalDate.now();//For reference
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        return localDate.format(formatter);
     }
+
+    public static String getNextWeekDateString() {
+        LocalDate localDate = LocalDate.now().plusDays(7);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        return localDate.format(formatter);
+    }
+
 }
