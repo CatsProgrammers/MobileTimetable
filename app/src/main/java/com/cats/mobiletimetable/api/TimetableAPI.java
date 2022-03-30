@@ -1,10 +1,5 @@
 package com.cats.mobiletimetable.api;
 
-/*
-TODO тут будет класс для работы с API расписания. По сути сделать порт с
-https://github.com/GeorgiyDemo/fa_api/blob/master/fa_api/api.py
-*/
-
 import java.util.List;
 
 import retrofit2.Call;

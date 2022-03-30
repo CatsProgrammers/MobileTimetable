@@ -56,6 +56,7 @@ public class DbConverter {
         lesson.beginLesson = model.beginLesson;
         lesson.endLesson = model.endLesson;
         lesson.url = model.url1;
+        lesson.auditorium = model.auditorium;
 
         //Работаем со зданием
         long buildingId;

@@ -2,6 +2,7 @@ package com.cats.mobiletimetable;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -23,7 +24,10 @@ import com.cats.mobiletimetable.db.relations.LessonWithDetails;
 import com.cats.mobiletimetable.db.tables.Lesson;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -43,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     TimetableAPI api;
     AppDatabase db;
     DbConverter converter;
+    String apiBaseUrl = "https://ruz.fa.ru";
+    DateTimeFormatter formatter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,12 +76,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        dateSelectEditText.setText(formatter.format(LocalDate.now()));
+
         db = AppDatabase.getDbInstance(getApplicationContext());
         converter = new DbConverter(db);
+
         //Создание объекта Retrofit для http-запросов
-        //TODO: Вынести в интерфейс
-        String baseUrl = "https://ruz.fa.ru";
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create()).build();
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(apiBaseUrl).addConverterFactory(GsonConverterFactory.create()).build();
 
         api = retrofit.create(TimetableAPI.class);
         initRecycleView();
@@ -86,10 +94,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadApiData() {
 
-        //TODO: взять даты с календаря
-        String startDate = Utils.getCurrentDateString();
-        String endDate = Utils.getNextWeekDateString();
+        String startDate = Utils.stringFormater(myCalendar.getTime());
+        String endDate = Utils.stringFormater(myCalendar.getTime());
 
+        //TODO: динамично подставлять группу пользователя
         Call<List<GroupResponseModel>> groupCall = api.getGroupByString("ПИ19-3", "group");
         groupCall.enqueue(new Callback<List<GroupResponseModel>>() {
             @Override
@@ -126,8 +134,10 @@ public class MainActivity extends AppCompatActivity {
                         db.lessonDao().insertLesson(lesson);
                     }
 
-                    List<LessonWithDetails> recordList = db.lessonDao().getAllLessonsWithDetails();
-                    lessonListAdapter.setLessonList(recordList);
+                    //List<LessonWithDetails> recordList = db.lessonDao().getAllLessonsWithDetails();
+                    //lessonListAdapter.setLessonList(recordList);
+                    loadRecordList();
+
                     Toast.makeText(getApplicationContext(), "Успешно обновил расписание", Toast.LENGTH_SHORT).show();
 
                 } else {
@@ -151,7 +161,6 @@ public class MainActivity extends AppCompatActivity {
         timetableRecyclerView.addItemDecoration(dividerItemDecoration);
         lessonListAdapter = new LessonListAdapter(this);
         timetableRecyclerView.setAdapter(lessonListAdapter);
-
     }
 
     private void loadRecordList() {
@@ -160,9 +169,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateLabel() {
-        String myFormat = "dd.MM.yyyy";
-        SimpleDateFormat dateFormat = new SimpleDateFormat(myFormat, Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
         dateSelectEditText.setText(dateFormat.format(myCalendar.getTime()));
+        loadApiData();
     }
 
 }

@@ -1,6 +1,7 @@
 package com.cats.mobiletimetable.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,8 +45,7 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
 
         LessonWithDetails currentLesson = lessonList.get(position);
         holder.title.setText(currentLesson.lesson.name);
-        //TODO: глянуть, то ли отображается - нужно отображать аудиторию
-        holder.place.setText(currentLesson.building.label);
+        holder.place.setText(currentLesson.lesson.auditorium);
         holder.teacher.setText(currentLesson.teacher.name);
         holder.timeBegin.setText(currentLesson.lesson.beginLesson);
         holder.timeEnd.setText(currentLesson.lesson.endLesson);

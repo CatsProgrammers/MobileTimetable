@@ -12,6 +12,8 @@ public class Lesson {
 
     public String name;
 
+    public String auditorium;
+
     @ColumnInfo(name = "begin_lesson")
     public String beginLesson;
 
