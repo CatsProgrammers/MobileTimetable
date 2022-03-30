@@ -1,7 +1,6 @@
 package com.cats.mobiletimetable.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,8 +49,18 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
         holder.timeBegin.setText(currentLesson.lesson.beginLesson);
         holder.timeEnd.setText(currentLesson.lesson.endLesson);
 
-        //TODO: выставить lessonType в ImageView
-
+        holder.lessonTypeText.setText(currentLesson.kindOfWork.name);
+        switch (currentLesson.kindOfWork.name) {
+            case ("Семинар"):
+                holder.lessonTypeImage.setImageResource(R.drawable.circle_seminar);
+                break;
+            case ("Лекция"):
+                holder.lessonTypeImage.setImageResource(R.drawable.circle_lecture);
+                break;
+            default:
+                holder.lessonTypeImage.setImageResource(R.drawable.circle_other);
+                break;
+        }
 
     }
 
@@ -67,7 +76,8 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
         TextView teacher;
         TextView timeBegin;
         TextView timeEnd;
-        ImageView lessonType;
+        TextView lessonTypeText;
+        ImageView lessonTypeImage;
 
         public MyViewHolder(View view) {
             super(view);
@@ -77,7 +87,8 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
             teacher = view.findViewById(R.id.teacherTextView);
             timeBegin = view.findViewById(R.id.timeBeginTextView);
             timeEnd = view.findViewById(R.id.timeEndTextView);
-            lessonType = view.findViewById(R.id.lessonTypeImageView);
+            lessonTypeImage = view.findViewById(R.id.lessonTypeImageView);
+            lessonTypeText = view.findViewById(R.id.lessonTypeTextView);
 
         }
     }

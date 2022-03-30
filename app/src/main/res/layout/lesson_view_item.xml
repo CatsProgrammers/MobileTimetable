@@ -16,7 +16,6 @@
 
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list_view_item_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -39,7 +38,7 @@
 
         <LinearLayout
             android:layout_width="288dp"
-            android:layout_height="95dp"
+            android:layout_height="115dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -48,11 +47,11 @@
 
             <TextView
                 android:id="@+id/titleTextView"
-                android:textStyle="bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="TextView"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/placeTextView"
@@ -67,12 +66,19 @@
                 android:layout_height="wrap_content"
                 android:text="TextView"
                 android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/lessonTypeTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout3"
             android:layout_width="65dp"
-            android:layout_height="95dp"
+            android:layout_height="115dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -89,7 +95,8 @@
                 android:id="@+id/lessonTypeImageView"
                 android:layout_width="match_parent"
                 android:layout_height="22dp"
-                tools:srcCompat="@tools:sample/avatars" />
+                android:scaleType="fitStart"
+                app:srcCompat="@drawable/circle_other" />
 
             <TextView
                 android:id="@+id/timeEndTextView"
