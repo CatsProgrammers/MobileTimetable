@@ -77,18 +77,14 @@ public class MainActivity extends AppCompatActivity {
         String baseUrl = "https://ruz.fa.ru";
         Retrofit retrofit = new Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create()).build();
 
-
         api = retrofit.create(TimetableAPI.class);
         initRecycleView();
-        loadApiData();
         loadRecordList();
+        loadApiData();
 
     }
 
     private void loadApiData() {
-
-        //Чистим от предыдущих записей
-        //db.lessonDao().deleteAll();
 
         //TODO: взять даты с календаря
         String startDate = Utils.getCurrentDateString();
@@ -123,11 +119,16 @@ public class MainActivity extends AppCompatActivity {
 
                     assert response.body() != null;
 
+                    db.lessonDao().deleteAll();
                     List<Lesson> lessonList = converter.lessonConverter(response.body());
 
                     for (Lesson lesson : lessonList) {
                         db.lessonDao().insertLesson(lesson);
                     }
+
+                    List<LessonWithDetails> recordList = db.lessonDao().getAllLessonsWithDetails();
+                    lessonListAdapter.setLessonList(recordList);
+                    Toast.makeText(getApplicationContext(), "Успешно обновил расписание", Toast.LENGTH_SHORT).show();
 
                 } else {
                     Toast.makeText(getApplicationContext(), "Server returned an error", Toast.LENGTH_SHORT).show();
