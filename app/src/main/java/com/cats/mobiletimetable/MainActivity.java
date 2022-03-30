@@ -1,7 +1,10 @@
 package com.cats.mobiletimetable;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -170,6 +173,27 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
         dateSelectEditText.setText(dateFormat.format(myCalendar.getTime()));
         loadApiData();
+    }
+
+
+
+
+    // создание меню из XML
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    // обработка нажатий на меню
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        String settingsString = getResources().getString(R.string.action_settings);
+        if (item.getTitle().toString().equals(settingsString)) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+        }
+        return true;
     }
 
 }

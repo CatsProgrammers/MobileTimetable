@@ -21,10 +21,8 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
     public List<LessonWithDetails> lessonList;
     private Context context;
 
-
     public LessonListAdapter(Context context) {
         this.context = context;
-
     }
 
     public void setLessonList(List<LessonWithDetails> lessonList) {

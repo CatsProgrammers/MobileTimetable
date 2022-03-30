@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">MobileTimetable</string>
-
+    <string name="action_settings">Настройки</string>
 </resources>
