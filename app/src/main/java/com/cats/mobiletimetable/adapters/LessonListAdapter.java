@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,12 +43,14 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
 
         LessonWithDetails currentLesson = lessonList.get(position);
         holder.title.setText(currentLesson.lesson.name);
-        holder.place.setText(currentLesson.lesson.auditorium);
+        holder.auditorium.setText(currentLesson.lesson.auditorium);
+        holder.place.setText(currentLesson.building.label);
         holder.teacher.setText(currentLesson.teacher.name);
         holder.timeBegin.setText(currentLesson.lesson.beginLesson);
         holder.timeEnd.setText(currentLesson.lesson.endLesson);
+        holder.group.setText("мяу");
 
-        holder.lessonTypeText.setText(currentLesson.kindOfWork.name);
+
         switch (currentLesson.kindOfWork.name) {
             case ("Семинар"):
                 holder.lessonTypeImage.setImageResource(R.drawable.circle_seminar);
@@ -60,6 +63,14 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
                 break;
         }
 
+        holder.lessonTypeImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Toast.makeText(context, currentLesson.kindOfWork.name, Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     @Override
@@ -70,23 +81,25 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView title;
-        TextView place;
+        TextView auditorium;
+        TextView group;
         TextView teacher;
+        TextView place;
         TextView timeBegin;
         TextView timeEnd;
-        TextView lessonTypeText;
         ImageView lessonTypeImage;
 
         public MyViewHolder(View view) {
             super(view);
 
             title = view.findViewById(R.id.titleTextView);
-            place = view.findViewById(R.id.placeTextView);
+            auditorium = view.findViewById(R.id.auditoriumTextView);
+            group = view.findViewById(R.id.groupTextView);
             teacher = view.findViewById(R.id.teacherTextView);
+            place = view.findViewById(R.id.placeTextView);
             timeBegin = view.findViewById(R.id.timeBeginTextView);
             timeEnd = view.findViewById(R.id.timeEndTextView);
             lessonTypeImage = view.findViewById(R.id.lessonTypeImageView);
-            lessonTypeText = view.findViewById(R.id.lessonTypeTextView);
 
         }
     }

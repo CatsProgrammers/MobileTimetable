@@ -38,7 +38,7 @@
 
         <LinearLayout
             android:layout_width="288dp"
-            android:layout_height="115dp"
+            android:layout_height="125dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -54,7 +54,14 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/placeTextView"
+                android:id="@+id/auditoriumTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/groupTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="TextView"
@@ -68,17 +75,18 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/lessonTypeTextView"
+                android:id="@+id/placeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="TextView"
                 android:textSize="16sp" />
+
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout3"
             android:layout_width="65dp"
-            android:layout_height="115dp"
+            android:layout_height="125dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

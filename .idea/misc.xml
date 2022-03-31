@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/circle.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/circle_lecture.xml" value="0.2005" />
         <entry key="app/src/main/res/drawable/circle_other.xml" value="0.1" />
@@ -11,7 +12,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.17901453896174352" />
         <entry key="app/src/main/res/layout/activity_settings.xml" value="0.4207457796149298" />
         <entry key="app/src/main/res/layout/activity_teacher_info.xml" value="0.14175724637681159" />
-        <entry key="app/src/main/res/layout/lesson_view_item.xml" value="0.5186862967157417" />
+        <entry key="app/src/main/res/layout/lesson_view_item.xml" value="0.41082802034855415" />
         <entry key="app/src/main/res/layout/list_view_item.xml" value="0.2997716651772553" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.38016967773437504" />
       </map>
