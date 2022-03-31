@@ -16,6 +16,7 @@
 
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list_view_item_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -36,13 +37,47 @@
         android:paddingBottom="12dp">
 
 
+        <TextView
+            android:id="@+id/timeBeginTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="22dp"
+            android:layout_marginEnd="16dp"
+            android:text="TextView"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/linearLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/lessonTypeImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:scaleType="fitStart"
+            app:layout_constraintBottom_toTopOf="@+id/timeEndTextView"
+            app:layout_constraintEnd_toStartOf="@+id/linearLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/timeBeginTextView"
+            app:srcCompat="@drawable/circle_other" />
+
+        <TextView
+            android:id="@+id/timeEndTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="22dp"
+            android:layout_marginEnd="16dp"
+            android:text="WextView"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/linearLayout"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <LinearLayout
-            android:layout_width="288dp"
+            android:id="@+id/linearLayout"
+            android:layout_width="275dp"
             android:layout_height="125dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/linearLayout3"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
@@ -76,38 +111,6 @@
 
             <TextView
                 android:id="@+id/placeTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textSize="16sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayout3"
-            android:layout_width="65dp"
-            android:layout_height="125dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:id="@+id/timeBeginTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textSize="16sp" />
-
-            <ImageView
-                android:id="@+id/lessonTypeImageView"
-                android:layout_width="match_parent"
-                android:layout_height="22dp"
-                android:scaleType="fitStart"
-                app:srcCompat="@drawable/circle_other" />
-
-            <TextView
-                android:id="@+id/timeEndTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="TextView"
