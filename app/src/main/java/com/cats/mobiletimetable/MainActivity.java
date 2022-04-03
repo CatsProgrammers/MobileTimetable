@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cats.mobiletimetable.adapters.LessonListAdapter;
+import com.cats.mobiletimetable.api.AppApi;
 import com.cats.mobiletimetable.api.GroupResponseModel;
 import com.cats.mobiletimetable.api.LessonResponseModel;
 import com.cats.mobiletimetable.api.TimetableAPI;
@@ -24,6 +25,7 @@ import com.cats.mobiletimetable.converters.DbConverter;
 import com.cats.mobiletimetable.db.AppDatabase;
 import com.cats.mobiletimetable.db.relations.LessonWithDetails;
 import com.cats.mobiletimetable.db.tables.Lesson;
+import com.cats.mobiletimetable.db.tables.Setting;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -48,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     TimetableAPI api;
     AppDatabase db;
     DbConverter converter;
-    String apiBaseUrl = "https://ruz.fa.ru";
     DateTimeFormatter formatter;
 
     @Override
@@ -81,12 +82,9 @@ public class MainActivity extends AppCompatActivity {
         dateSelectEditText.setText(formatter.format(LocalDate.now()));
 
         db = AppDatabase.getDbInstance(getApplicationContext());
+        api = AppApi.getApiInstance(getApplicationContext());
         converter = new DbConverter(db);
 
-        //Создание объекта Retrofit для http-запросов
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(apiBaseUrl).addConverterFactory(GsonConverterFactory.create()).build();
-
-        api = retrofit.create(TimetableAPI.class);
         initRecycleView();
         loadRecordList();
         loadApiData();
@@ -94,12 +92,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadApiData() {
+        Setting currentGroup = db.settingsDao().getItemByName("currentGroup");
+        //Если группу еще не устанавливали
+        if (currentGroup == null){
+            Toast.makeText(getApplicationContext(), "Выберите группу в настройках", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
 
         String startDate = Utils.stringFormater(myCalendar.getTime());
         String endDate = Utils.stringFormater(myCalendar.getTime());
 
         //TODO: динамично подставлять группу пользователя
-        Call<List<GroupResponseModel>> groupCall = api.getGroupByString("ПИ19-3", "group");
+        Call<List<GroupResponseModel>> groupCall = api.getGroupByString(currentGroup.value, "group");
         groupCall.enqueue(new Callback<List<GroupResponseModel>>() {
             @Override
             public void onResponse(Call<List<GroupResponseModel>> call, Response<List<GroupResponseModel>> response) {
@@ -190,6 +195,7 @@ public class MainActivity extends AppCompatActivity {
 
         String settingsString = getResources().getString(R.string.action_settings);
         if (item.getTitle().toString().equals(settingsString)) {
+            //TODO: добавить листенер на обновлялку
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         }
