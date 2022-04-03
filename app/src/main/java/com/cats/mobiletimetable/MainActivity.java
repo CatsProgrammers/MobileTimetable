@@ -10,6 +10,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -52,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
     DbConverter converter;
     DateTimeFormatter formatter;
 
+    ActivityResultLauncher<Intent> startActivityForResult;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +82,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Когда возвращаемся с настроек - обновляем расписание
+        startActivityForResult = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    loadApiData();
+                }
+        );
+
         formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         dateSelectEditText.setText(formatter.format(LocalDate.now()));
 
@@ -99,11 +111,9 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-
         String startDate = Utils.stringFormater(myCalendar.getTime());
         String endDate = Utils.stringFormater(myCalendar.getTime());
 
-        //TODO: динамично подставлять группу пользователя
         Call<List<GroupResponseModel>> groupCall = api.getGroupByString(currentGroup.value, "group");
         groupCall.enqueue(new Callback<List<GroupResponseModel>>() {
             @Override
@@ -195,9 +205,8 @@ public class MainActivity extends AppCompatActivity {
 
         String settingsString = getResources().getString(R.string.action_settings);
         if (item.getTitle().toString().equals(settingsString)) {
-            //TODO: добавить листенер на обновлялку
             Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
+            startActivityForResult.launch(intent);
         }
         return true;
     }
