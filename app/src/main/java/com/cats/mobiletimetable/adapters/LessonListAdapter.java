@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cats.mobiletimetable.R;
+import com.cats.mobiletimetable.db.AppDatabase;
 import com.cats.mobiletimetable.db.relations.LessonWithDetails;
 
 import java.util.List;
@@ -21,9 +22,11 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
 
     public List<LessonWithDetails> lessonList;
     private Context context;
+    private AppDatabase db;
 
     public LessonListAdapter(Context context) {
         this.context = context;
+        db = AppDatabase.getDbInstance(context);
     }
 
     public void setLessonList(List<LessonWithDetails> lessonList) {
@@ -48,7 +51,7 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
         holder.teacher.setText(currentLesson.teacher.name);
         holder.timeBegin.setText(currentLesson.lesson.beginLesson);
         holder.timeEnd.setText(currentLesson.lesson.endLesson);
-        holder.group.setText("мяу");
+        holder.group.setText(currentLesson.lesson.stream);
 
 
         switch (currentLesson.kindOfWork.name) {

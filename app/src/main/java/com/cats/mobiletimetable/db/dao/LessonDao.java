@@ -25,15 +25,13 @@ public interface LessonDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Long insertLesson(Lesson lesson);
 
-    // Insert multiple items
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     List<Long> insertLesson(Lesson... lessons);
-
-
 
     @Delete
     void deleteLesson(Lesson lesson);
 
-    @Query("DELETE FROM lessons")
+    @Query("DELETE FROM lessons;")
     void deleteAll();
 }

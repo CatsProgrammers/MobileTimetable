@@ -20,9 +20,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cats.mobiletimetable.adapters.LessonListAdapter;
 import com.cats.mobiletimetable.api.AppApi;
+import com.cats.mobiletimetable.api.FaApi;
 import com.cats.mobiletimetable.api.GroupResponseModel;
 import com.cats.mobiletimetable.api.LessonResponseModel;
-import com.cats.mobiletimetable.api.TimetableAPI;
+import com.cats.mobiletimetable.api.RuzApi;
 import com.cats.mobiletimetable.converters.DbConverter;
 import com.cats.mobiletimetable.db.AppDatabase;
 import com.cats.mobiletimetable.db.relations.LessonWithDetails;
@@ -40,8 +41,6 @@ import java.util.Objects;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
     EditText dateSelectEditText;
     RecyclerView timetableRecyclerView;
     LessonListAdapter lessonListAdapter;
-    TimetableAPI api;
+    RuzApi ruzApi;
+    FaApi faApi;
     AppDatabase db;
     DbConverter converter;
     DateTimeFormatter formatter;
@@ -94,7 +94,8 @@ public class MainActivity extends AppCompatActivity {
         dateSelectEditText.setText(formatter.format(LocalDate.now()));
 
         db = AppDatabase.getDbInstance(getApplicationContext());
-        api = AppApi.getApiInstance(getApplicationContext());
+        ruzApi = AppApi.getRuzApiInstance(getApplicationContext());
+        faApi = AppApi.getFaApiInstance(getApplicationContext());
         converter = new DbConverter(db);
 
         initRecycleView();
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         String startDate = Utils.stringFormater(myCalendar.getTime());
         String endDate = Utils.stringFormater(myCalendar.getTime());
 
-        Call<List<GroupResponseModel>> groupCall = api.getGroupByString(currentGroup.value, "group");
+        Call<List<GroupResponseModel>> groupCall = ruzApi.getGroupByString(currentGroup.value, "group");
         groupCall.enqueue(new Callback<List<GroupResponseModel>>() {
             @Override
             public void onResponse(Call<List<GroupResponseModel>> call, Response<List<GroupResponseModel>> response) {
@@ -134,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadLessonData(@NonNull String groupId, @NonNull String start, @NonNull String finish) {
-        Call<List<LessonResponseModel>> call = api.getTimetableByGroup(groupId, start, finish, 1);
+        Call<List<LessonResponseModel>> call = ruzApi.getTimetableByGroup(groupId, start, finish, 1);
         call.enqueue(new Callback<List<LessonResponseModel>>() {
             @Override
             public void onResponse(Call<List<LessonResponseModel>> call, Response<List<LessonResponseModel>> response) {

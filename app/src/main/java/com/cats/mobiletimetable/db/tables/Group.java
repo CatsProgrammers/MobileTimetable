@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 public class Group {
 
     @PrimaryKey(autoGenerate = true)
-    public Long id;
+    public long groupId;
 
     @ColumnInfo(name = "label_id")
     public String labelId;

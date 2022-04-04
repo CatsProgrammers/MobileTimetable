@@ -3,8 +3,6 @@ package com.cats.mobiletimetable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.cats.mobiletimetable.api.AppApi;
 import com.cats.mobiletimetable.api.GroupResponseModel;
-import com.cats.mobiletimetable.api.TimetableAPI;
+import com.cats.mobiletimetable.api.RuzApi;
 import com.cats.mobiletimetable.converters.DbConverter;
 import com.cats.mobiletimetable.db.AppDatabase;
 import com.cats.mobiletimetable.db.tables.Group;
@@ -24,7 +22,6 @@ import com.cats.mobiletimetable.db.tables.Setting;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,7 +34,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     Spinner userTypeSpinner;
     AppDatabase db;
-    TimetableAPI api;
+    RuzApi api;
 
 
     DbConverter dbConverter;
@@ -58,7 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         db = AppDatabase.getDbInstance(getApplicationContext());
         dbConverter = new DbConverter(db);
-        api = AppApi.getApiInstance(getApplicationContext());
+        api = AppApi.getRuzApiInstance(getApplicationContext());
 
         Setting item = db.settingsDao().getItemByName("currentGroup");
 
@@ -81,13 +78,20 @@ public class SettingsActivity extends AppCompatActivity {
                     public void onResponse(Call<List<GroupResponseModel>> call, Response<List<GroupResponseModel>> response) {
                         if ((response.isSuccessful()) && (response.body() != null)) {
 
-                            //TODO: запись в БД тех групп, которых там нет
-
+                            //TODO: синхронизация всех групп по единому URL
+                            //https://schedule.fa.ru/api/groups.json
 
                             groupListAdapter.clear();
                             List<GroupResponseModel> currentGroupList = response.body();
                             for (Group item: dbConverter.groupConverter(currentGroupList)) {
-                                db.groupDao().insertGroup(item);
+
+                                //Если этой группы нет в БД - добавляем
+
+                                //TODO выкинуть потом?
+                                if (db.groupDao().getGroupByName(item.name) == null){
+                                    db.groupDao().insertGroup(item);
+                                }
+
                                 groupListAdapter.add(item.name);
                             }
                             groupListAdapter.notifyDataSetChanged();

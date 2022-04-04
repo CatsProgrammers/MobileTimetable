@@ -20,7 +20,6 @@ public class DbConverter {
         this.db = db;
     }
 
-    //TODO: переделать потом на интерфейсы
     public List<Group> groupConverter(List<GroupResponseModel> itemsList) {
         List<Group> resultList = new ArrayList<>();
         for (GroupResponseModel item : itemsList) {
@@ -57,6 +56,9 @@ public class DbConverter {
         lesson.endLesson = model.endLesson;
         lesson.url = model.url1;
         lesson.auditorium = model.auditorium;
+
+        String bufStream = (String) model.stream;
+        lesson.stream = bufStream.trim();
 
         //Работаем со зданием
         long buildingId;
@@ -98,4 +100,6 @@ public class DbConverter {
         lesson.kindOfWorkId = kindOfWorkId;
         return lesson;
     }
+
+
 }

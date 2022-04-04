@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 public class Building {
 
     @PrimaryKey(autoGenerate = true)
-    public Long id;
+    public long id;
 
     public String label;
 

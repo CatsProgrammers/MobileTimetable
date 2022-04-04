@@ -32,8 +32,4 @@ public class LessonWithDetails {
             entityColumn = "id"
     )
     public KindOfWork kindOfWork;
-
-    //TODO: как-то включить сюда группы, но там отношение many to many, загуглить
-
-
 }

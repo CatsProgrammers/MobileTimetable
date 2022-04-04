@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 public class Lesson {
 
     @PrimaryKey(autoGenerate = true)
-    public Long id;
+    public long lessonId;
 
     public String name;
 
@@ -22,12 +22,14 @@ public class Lesson {
 
     public String url;
 
+    public String stream;
+
     @ColumnInfo(name = "teacher_id")
-    public Long teacherId;
+    public long teacherId;
 
     @ColumnInfo(name = "building_id")
-    public Long buildingId;
+    public long buildingId;
 
     @ColumnInfo(name = "kind_of_work_id")
-    public Long kindOfWorkId;
+    public long kindOfWorkId;
 }

@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 public class Teacher {
 
     @PrimaryKey(autoGenerate = true)
-    public Long id;
+    public long id;
 
     public String name;
 

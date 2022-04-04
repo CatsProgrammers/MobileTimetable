@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "kinds_of_work")
 public class KindOfWork {
     @PrimaryKey(autoGenerate = true)
-    public Long id;
+    public long id;
 
     public String name;
 }
