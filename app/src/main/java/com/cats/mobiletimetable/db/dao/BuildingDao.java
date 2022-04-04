@@ -26,7 +26,6 @@ public interface BuildingDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Long insertBuilding(Building building);
 
-    // Insert multiple items
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     List<Long> insertBuilding(Building... buildings);
 

@@ -40,7 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
     TimetableAPI api;
 
 
-
+    DbConverter dbConverter;
     List<String> groups;
 
 
@@ -57,6 +57,7 @@ public class SettingsActivity extends AppCompatActivity {
         userTypeSpinner = findViewById(R.id.userTypeSpinner);
 
         db = AppDatabase.getDbInstance(getApplicationContext());
+        dbConverter = new DbConverter(db);
         api = AppApi.getApiInstance(getApplicationContext());
 
         Setting item = db.settingsDao().getItemByName("currentGroup");
@@ -82,10 +83,12 @@ public class SettingsActivity extends AppCompatActivity {
 
                             //TODO: запись в БД тех групп, которых там нет
 
+
                             groupListAdapter.clear();
                             List<GroupResponseModel> currentGroupList = response.body();
-                            for (GroupResponseModel group: currentGroupList) {
-                                groupListAdapter.add(group.label);
+                            for (Group item: dbConverter.groupConverter(currentGroupList)) {
+                                db.groupDao().insertGroup(item);
+                                groupListAdapter.add(item.name);
                             }
                             groupListAdapter.notifyDataSetChanged();
                         }

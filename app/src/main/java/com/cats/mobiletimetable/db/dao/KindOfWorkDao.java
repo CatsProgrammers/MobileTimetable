@@ -26,7 +26,6 @@ public interface KindOfWorkDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Long insertItem(KindOfWork kindOfWork);
 
-    // Insert multiple items
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     List<Long> insertItem(KindOfWork... kindOfWorks);
 

@@ -28,7 +28,6 @@ public interface SettingsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Long insertItem(Setting setting);
 
-    // Insert multiple items
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     List<Long> insertItem(Setting... settings);
 
