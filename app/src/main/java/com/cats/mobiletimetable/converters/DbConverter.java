@@ -38,6 +38,18 @@ public class DbConverter {
         return group;
     }
 
+    public List<String> groupToStringConverter(List<Group> itemsList) {
+        List<String> resultList = new ArrayList<>();
+        for (Group item : itemsList) {
+            resultList.add(groupToStringConverter(item));
+        }
+        return resultList;
+    }
+
+    public String groupToStringConverter(Group item) {
+        return item.name;
+    }
+
 
     public List<Lesson> lessonConverter(List<LessonResponseModel> itemsList) {
         List<Lesson> resultList = new ArrayList<>();
@@ -57,8 +69,15 @@ public class DbConverter {
         lesson.url = model.url1;
         lesson.auditorium = model.auditorium;
 
-        String bufStream = (String) model.stream;
-        lesson.stream = bufStream.trim();
+        //Если нет потока, то значит, что это конкретная группа
+        if (model.stream == null) {
+            lesson.stream = model.group;
+        }
+        //Иначе это все же поток
+        else {
+            String bufStream = (String) model.stream;
+            lesson.stream = bufStream.trim();
+        }
 
         //Работаем со зданием
         long buildingId;

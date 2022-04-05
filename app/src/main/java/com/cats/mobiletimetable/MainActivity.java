@@ -27,6 +27,7 @@ import com.cats.mobiletimetable.api.RuzApi;
 import com.cats.mobiletimetable.converters.DbConverter;
 import com.cats.mobiletimetable.db.AppDatabase;
 import com.cats.mobiletimetable.db.relations.LessonWithDetails;
+import com.cats.mobiletimetable.db.tables.Group;
 import com.cats.mobiletimetable.db.tables.Lesson;
 import com.cats.mobiletimetable.db.tables.Setting;
 
@@ -100,14 +101,43 @@ public class MainActivity extends AppCompatActivity {
 
         initRecycleView();
         loadRecordList();
+        syncGroupsApiData();
         loadApiData();
 
+    }
+
+    /**
+     * Синхронизация списка всех групп с БД
+     */
+    private void syncGroupsApiData() {
+        Call<List<GroupResponseModel>> call = faApi.getAllGroups();
+        call.enqueue(new Callback<List<GroupResponseModel>>() {
+            @Override
+            public void onResponse(Call<List<GroupResponseModel>> call, Response<List<GroupResponseModel>> response) {
+                if ((response.isSuccessful()) && (response.body() != null)) {
+                    List<Group> groupsList = converter.groupConverter(response.body());
+                    for (Group item : groupsList) {
+                        if (db.groupDao().getGroupByName(item.name) == null) {
+                            db.groupDao().insertGroup(item);
+                        }
+                    }
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "Server returned an error", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<GroupResponseModel>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Connection error", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void loadApiData() {
         Setting currentGroup = db.settingsDao().getItemByName("currentGroup");
         //Если группу еще не устанавливали
-        if (currentGroup == null){
+        if (currentGroup == null) {
             Toast.makeText(getApplicationContext(), "Выберите группу в настройках", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -190,8 +220,6 @@ public class MainActivity extends AppCompatActivity {
         dateSelectEditText.setText(dateFormat.format(myCalendar.getTime()));
         loadApiData();
     }
-
-
 
 
     // создание меню из XML

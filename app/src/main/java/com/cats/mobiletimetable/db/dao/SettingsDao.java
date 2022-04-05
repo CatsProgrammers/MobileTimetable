@@ -5,13 +5,8 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Transaction;
 
-import com.cats.mobiletimetable.db.relations.LessonWithDetails;
-import com.cats.mobiletimetable.db.tables.KindOfWork;
-import com.cats.mobiletimetable.db.tables.Lesson;
 import com.cats.mobiletimetable.db.tables.Setting;
-
 
 import java.util.List;
 
