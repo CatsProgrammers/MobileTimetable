@@ -7,6 +7,8 @@ import java.util.Date;
 
 public class Utils {
 
+    public final static String groupSettingsKey = "currentGroup";
+
     public static String stringFormater(Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd");
         return formatter.format(date);

@@ -29,4 +29,7 @@ public interface SettingsDao {
     @Delete
     void deleteItem(Setting setting);
 
+    @Query("DELETE FROM settings WHERE name=:name;")
+    void deleteItem(String name);
+
 }

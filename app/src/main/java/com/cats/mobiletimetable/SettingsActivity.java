@@ -20,6 +20,7 @@ import java.util.List;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    String groupSettingsKey;
     ArrayAdapter<String> groupListAdapter;
     AutoCompleteTextView groupTextView;
 
@@ -40,11 +41,12 @@ public class SettingsActivity extends AppCompatActivity {
         groupTextView = findViewById(R.id.groupsList);
         userTypeSpinner = findViewById(R.id.userTypeSpinner);
 
+        groupSettingsKey = Utils.groupSettingsKey;
         db = AppDatabase.getDbInstance(getApplicationContext());
         dbConverter = new DbConverter(db);
         api = AppApi.getRuzApiInstance(getApplicationContext());
 
-        Setting item = db.settingsDao().getItemByName("currentGroup");
+        Setting item = db.settingsDao().getItemByName(groupSettingsKey);
 
         if (item != null) {
             groupTextView.setText(item.value);
@@ -61,10 +63,13 @@ public class SettingsActivity extends AppCompatActivity {
 
                 String currentGroupString = groupTextView.getText().toString();
 
+                //Если есть уже какое-то значение в БД, то удаляем его
+                if (db.settingsDao().getItemByName(groupSettingsKey) != null){
+                    db.settingsDao().deleteItem(groupSettingsKey);
+                }
 
-                //TODO обновление значения, если оно уже есть в БД, а не еще один insert!
                 Setting item = new Setting();
-                item.name = "currentGroup";
+                item.name = groupSettingsKey;
                 item.value = currentGroupString;
                 db.settingsDao().insertItem(item);
 
