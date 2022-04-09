@@ -9,6 +9,8 @@ public class Utils {
 
     public final static String groupSettingsKey = "currentGroup";
 
+    public final static String userTypeSettingsKey = "currentUserType";
+
     public static String stringFormater(Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd");
         return formatter.format(date);
