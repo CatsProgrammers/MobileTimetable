@@ -1,7 +1,8 @@
 package com.cats.mobiletimetable.converters;
 
-import com.cats.mobiletimetable.api.GroupResponseModel;
-import com.cats.mobiletimetable.api.LessonResponseModel;
+import com.cats.mobiletimetable.api.responsemodels.GroupResponseModel;
+import com.cats.mobiletimetable.api.responsemodels.LessonResponseModel;
+import com.cats.mobiletimetable.api.responsemodels.TeacherResponseModel;
 import com.cats.mobiletimetable.db.AppDatabase;
 import com.cats.mobiletimetable.db.tables.Building;
 import com.cats.mobiletimetable.db.tables.Group;
@@ -18,6 +19,21 @@ public class DbConverter {
 
     public DbConverter(AppDatabase db) {
         this.db = db;
+    }
+
+
+    public List<Teacher> teacherConverter(List<TeacherResponseModel> itemsList) {
+        List<Teacher> resultList = new ArrayList<>();
+        for (TeacherResponseModel item : itemsList) {
+            resultList.add(teacherConverter(item));
+        }
+        return resultList;
+    }
+
+    public Teacher teacherConverter(TeacherResponseModel item) {
+        Teacher teacher = new Teacher();
+        teacher.name = item.label;
+        return teacher;
     }
 
     public List<Group> groupConverter(List<GroupResponseModel> itemsList) {
@@ -50,6 +66,17 @@ public class DbConverter {
         return item.name;
     }
 
+    public List<String> teacherToStringConverter(List<Teacher> itemsList) {
+        List<String> resultList = new ArrayList<>();
+        for (Teacher item : itemsList) {
+            resultList.add(teacherToStringConverter(item));
+        }
+        return resultList;
+    }
+
+    public String teacherToStringConverter(Teacher item) {
+        return item.name;
+    }
 
     public List<Lesson> lessonConverter(List<LessonResponseModel> itemsList) {
         List<Lesson> resultList = new ArrayList<>();

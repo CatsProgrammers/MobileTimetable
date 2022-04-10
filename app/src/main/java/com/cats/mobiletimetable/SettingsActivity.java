@@ -47,14 +47,18 @@ public class SettingsActivity extends AppCompatActivity {
         userTypes = Arrays.asList(getResources().getStringArray(R.array.user_types));
         spinnerInit();
 
+        spinnerBaseInit();
+
+    }
+
+    private void spinnerBaseInit() {
         //Если студент
         if (spinner.getSelectedItem().equals(userTypes.get(0))) {
             studentTypeInit();
         } else if (spinner.getSelectedItem().equals(userTypes.get(1))) {
             teacherTypeInit();
         }
-
-        //
+        //TODO: Аудитория (?)
     }
 
     private void spinnerInit() {
@@ -75,7 +79,6 @@ public class SettingsActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 String currentValue = userTypes.get(position);
 
-
                 //Если есть уже какое-то значение в БД, то удаляем его
                 if (db.settingsDao().getItemByName(userTypeSettingsKey) != null) {
                     db.settingsDao().deleteItem(userTypeSettingsKey);
@@ -85,6 +88,8 @@ public class SettingsActivity extends AppCompatActivity {
                 item.name = userTypeSettingsKey;
                 item.value = currentValue;
                 db.settingsDao().insertItem(item);
+
+                spinnerBaseInit();
             }
 
             @Override
@@ -95,9 +100,44 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
-    //TODO: допилить
     private void teacherTypeInit() {
+
         Log.i("autoCompleteTextView", "отрабатывает teacherTypeInit");
+        List<String> teachersList = dbConverter.teacherToStringConverter(db.teacherDao().getAllTeachers());
+
+        String teacherSettingsKey = Utils.teacherSettingsKey;
+
+        Setting item = db.settingsDao().getItemByName(teacherSettingsKey);
+
+        if (item != null) {
+            autoCompleteTextView.setText(item.value);
+        }
+
+        ArrayAdapter<String> teacherListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, teachersList);
+        autoCompleteTextView.setAdapter(teacherListAdapter);
+
+        //Когда нажимаем на наш AutoCompleteTextView
+        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> p, View v, int pos, long id) {
+
+                String currentTeacherString = autoCompleteTextView.getText().toString();
+
+                //Если есть уже какое-то значение в БД, то удаляем его
+                if (db.settingsDao().getItemByName(teacherSettingsKey) != null) {
+                    db.settingsDao().deleteItem(teacherSettingsKey);
+                }
+
+                Setting item = new Setting();
+                item.name = teacherSettingsKey;
+                item.value = currentTeacherString;
+                db.settingsDao().insertItem(item);
+
+                Toast.makeText(getApplicationContext(), "Преподаватель " + currentTeacherString + " выбран", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
     }
 
     private void studentTypeInit() {
@@ -112,8 +152,8 @@ public class SettingsActivity extends AppCompatActivity {
             autoCompleteTextView.setText(item.value);
         }
 
-        List<String> groups = dbConverter.groupToStringConverter(db.groupDao().getAllGroups());
-        ArrayAdapter<String> groupListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, groups);
+        List<String> groupsList = dbConverter.groupToStringConverter(db.groupDao().getAllGroups());
+        ArrayAdapter<String> groupListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, groupsList);
         autoCompleteTextView.setAdapter(groupListAdapter);
         //Когда нажимаем на наш AutoCompleteTextView
         autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

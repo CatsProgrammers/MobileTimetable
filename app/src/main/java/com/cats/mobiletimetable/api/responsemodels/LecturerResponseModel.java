@@ -1,4 +1,4 @@
-package com.cats.mobiletimetable.api;
+package com.cats.mobiletimetable.api.responsemodels;
 
 
 import com.google.gson.annotations.Expose;

@@ -21,15 +21,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cats.mobiletimetable.adapters.LessonListAdapter;
 import com.cats.mobiletimetable.api.AppApi;
 import com.cats.mobiletimetable.api.FaApi;
-import com.cats.mobiletimetable.api.GroupResponseModel;
-import com.cats.mobiletimetable.api.LessonResponseModel;
 import com.cats.mobiletimetable.api.RuzApi;
+import com.cats.mobiletimetable.api.responsemodels.GroupResponseModel;
+import com.cats.mobiletimetable.api.responsemodels.LessonResponseModel;
+import com.cats.mobiletimetable.api.responsemodels.TeacherResponseModel;
 import com.cats.mobiletimetable.converters.DbConverter;
 import com.cats.mobiletimetable.db.AppDatabase;
 import com.cats.mobiletimetable.db.relations.LessonWithDetails;
 import com.cats.mobiletimetable.db.tables.Group;
 import com.cats.mobiletimetable.db.tables.Lesson;
 import com.cats.mobiletimetable.db.tables.Setting;
+import com.cats.mobiletimetable.db.tables.Teacher;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -37,7 +39,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -102,8 +103,36 @@ public class MainActivity extends AppCompatActivity {
         initRecycleView();
         loadRecordList();
         syncGroupsApiData();
+        syncTeachersApiData();
         loadApiData();
 
+    }
+
+
+    private void syncTeachersApiData() {
+
+        Call<List<TeacherResponseModel>> call = faApi.getAllTeachers();
+        call.enqueue(new Callback<List<TeacherResponseModel>>() {
+            @Override
+            public void onResponse(Call<List<TeacherResponseModel>> call, Response<List<TeacherResponseModel>> response) {
+                if ((response.isSuccessful()) && (response.body() != null)) {
+                    List<Teacher> teachersList = converter.teacherConverter(response.body());
+                    for (Teacher teacher : teachersList) {
+                        if (db.teacherDao().getTeacherByName(teacher.name) == null) {
+                            db.teacherDao().insertTeacher(teacher);
+                        }
+                    }
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "Server returned an error", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TeacherResponseModel>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Connection error: " + t, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**
@@ -129,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<GroupResponseModel>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Connection error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Connection error: " + t, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -145,11 +174,11 @@ public class MainActivity extends AppCompatActivity {
         String startDate = Utils.stringFormater(myCalendar.getTime());
         String endDate = Utils.stringFormater(myCalendar.getTime());
 
-        Call<List<GroupResponseModel>> groupCall = ruzApi.getGroupByString(currentGroup.value, "group");
+        Call<List<GroupResponseModel>> groupCall = ruzApi.getGroupByString(currentGroup.value);
         groupCall.enqueue(new Callback<List<GroupResponseModel>>() {
             @Override
             public void onResponse(Call<List<GroupResponseModel>> call, Response<List<GroupResponseModel>> response) {
-                if ((response.isSuccessful()) && (Objects.requireNonNull(response.body()).size() == 1)) {
+                if ((response.isSuccessful()) && (response.body() != null)) {
                     GroupResponseModel currentGroup = response.body().get(0);
                     loadLessonData(currentGroup.id, startDate, endDate);
                 } else {
@@ -159,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<GroupResponseModel>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Connection error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Connection error: " + t, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -194,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<LessonResponseModel>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Connection error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Connection error: " + t, Toast.LENGTH_SHORT).show();
             }
         });
     }
