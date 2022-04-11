@@ -2,13 +2,9 @@ package com.cats.mobiletimetable.db.tables;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 
 @Entity(tableName = "groups")
-public class Group {
-
-    @PrimaryKey(autoGenerate = true)
-    public long groupId;
+public class Group extends BaseTable {
 
     @ColumnInfo(name = "label_id")
     public String labelId;

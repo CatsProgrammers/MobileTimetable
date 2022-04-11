@@ -25,7 +25,9 @@ import com.cats.mobiletimetable.api.RuzApi;
 import com.cats.mobiletimetable.api.responsemodels.GroupResponseModel;
 import com.cats.mobiletimetable.api.responsemodels.LessonResponseModel;
 import com.cats.mobiletimetable.api.responsemodels.TeacherResponseModel;
-import com.cats.mobiletimetable.converters.DbConverter;
+import com.cats.mobiletimetable.converters.GroupConverter;
+import com.cats.mobiletimetable.converters.LessonConverter;
+import com.cats.mobiletimetable.converters.TeacherConverter;
 import com.cats.mobiletimetable.db.AppDatabase;
 import com.cats.mobiletimetable.db.relations.LessonWithDetails;
 import com.cats.mobiletimetable.db.tables.Group;
@@ -53,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
     RuzApi ruzApi;
     FaApi faApi;
     AppDatabase db;
-    DbConverter converter;
     DateTimeFormatter formatter;
 
     ActivityResultLauncher<Intent> startActivityForResult;
@@ -98,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
         db = AppDatabase.getDbInstance(getApplicationContext());
         ruzApi = AppApi.getRuzApiInstance(getApplicationContext());
         faApi = AppApi.getFaApiInstance(getApplicationContext());
-        converter = new DbConverter(db);
 
         //TODO Обновляем раз в недельку или если нет вообще записей
         syncGroupsApiData();
@@ -115,12 +115,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void syncTeachersApiData() {
 
+        TeacherConverter teacherConverter = new TeacherConverter();
+
         Call<List<TeacherResponseModel>> call = faApi.getAllTeachers();
         call.enqueue(new Callback<List<TeacherResponseModel>>() {
             @Override
             public void onResponse(Call<List<TeacherResponseModel>> call, Response<List<TeacherResponseModel>> response) {
                 if ((response.isSuccessful()) && (response.body() != null)) {
-                    List<Teacher> teachersList = converter.teacherConverter(response.body());
+                    List<Teacher> teachersList = teacherConverter.convertToEntity(response.body());
                     for (Teacher teacher : teachersList) {
                         if (db.teacherDao().getTeacherByName(teacher.name) == null) {
                             db.teacherDao().insertTeacher(teacher);
@@ -143,12 +145,14 @@ public class MainActivity extends AppCompatActivity {
      * Синхронизация списка всех групп с БД
      */
     private void syncGroupsApiData() {
+
+        GroupConverter groupConverter = new GroupConverter();
         Call<List<GroupResponseModel>> call = faApi.getAllGroups();
         call.enqueue(new Callback<List<GroupResponseModel>>() {
             @Override
             public void onResponse(Call<List<GroupResponseModel>> call, Response<List<GroupResponseModel>> response) {
                 if ((response.isSuccessful()) && (response.body() != null)) {
-                    List<Group> groupsList = converter.groupConverter(response.body());
+                    List<Group> groupsList = groupConverter.convertToEntity(response.body());
                     for (Group item : groupsList) {
                         if (db.groupDao().getGroupByName(item.name) == null) {
                             db.groupDao().insertGroup(item);
@@ -198,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadLessonData(@NonNull String groupId, @NonNull String start, @NonNull String finish) {
+        LessonConverter lessonConverter = new LessonConverter(db);
         Call<List<LessonResponseModel>> call = ruzApi.getTimetableByGroup(groupId, start, finish, 1);
         call.enqueue(new Callback<List<LessonResponseModel>>() {
             @Override
@@ -208,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
                     assert response.body() != null;
 
                     db.lessonDao().deleteAll();
-                    List<Lesson> lessonList = converter.lessonConverter(response.body());
+                    List<Lesson> lessonList = lessonConverter.convertToEntity(response.body());
 
                     for (Lesson lesson : lessonList) {
                         db.lessonDao().insertLesson(lesson);

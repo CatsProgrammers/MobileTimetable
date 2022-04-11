@@ -13,7 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.cats.mobiletimetable.api.AppApi;
 import com.cats.mobiletimetable.api.RuzApi;
-import com.cats.mobiletimetable.converters.DbConverter;
+import com.cats.mobiletimetable.converters.GroupConverter;
+import com.cats.mobiletimetable.converters.TeacherConverter;
 import com.cats.mobiletimetable.db.AppDatabase;
 import com.cats.mobiletimetable.db.tables.Setting;
 
@@ -29,8 +30,6 @@ public class SettingsActivity extends AppCompatActivity {
     AppDatabase db;
     RuzApi api;
 
-    DbConverter dbConverter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +40,6 @@ public class SettingsActivity extends AppCompatActivity {
         spinner = findViewById(R.id.userTypeSpinner);
 
         db = AppDatabase.getDbInstance(getApplicationContext());
-        dbConverter = new DbConverter(db);
         api = AppApi.getRuzApiInstance(getApplicationContext());
 
         userTypes = Arrays.asList(getResources().getStringArray(R.array.user_types));
@@ -102,8 +100,10 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void teacherTypeInit() {
 
+        TeacherConverter teacherConverter = new TeacherConverter();
+
         Log.i("autoCompleteTextView", "отрабатывает teacherTypeInit");
-        List<String> teachersList = dbConverter.teacherToStringConverter(db.teacherDao().getAllTeachers());
+        List<String> teachersList = teacherConverter.convertToString(db.teacherDao().getAllTeachers());
 
         String teacherSettingsKey = Utils.teacherSettingsKey;
 
@@ -142,6 +142,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void studentTypeInit() {
 
+        GroupConverter groupConverter = new GroupConverter();
+
         Log.i("autoCompleteTextView", "отрабатывает studentTypeInit");
 
         String groupSettingsKey = Utils.groupSettingsKey;
@@ -152,7 +154,7 @@ public class SettingsActivity extends AppCompatActivity {
             autoCompleteTextView.setText(item.value);
         }
 
-        List<String> groupsList = dbConverter.groupToStringConverter(db.groupDao().getAllGroups());
+        List<String> groupsList = groupConverter.convertToString(db.groupDao().getAllGroups());
         ArrayAdapter<String> groupListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, groupsList);
         autoCompleteTextView.setAdapter(groupListAdapter);
         //Когда нажимаем на наш AutoCompleteTextView

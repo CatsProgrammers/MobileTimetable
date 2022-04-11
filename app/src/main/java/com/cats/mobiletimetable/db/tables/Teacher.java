@@ -1,13 +1,10 @@
 package com.cats.mobiletimetable.db.tables;
 
 import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 
 @Entity(tableName = "teachers")
-public class Teacher {
+public class Teacher extends BaseTable {
 
-    @PrimaryKey(autoGenerate = true)
-    public long id;
 
     public String name;
 
