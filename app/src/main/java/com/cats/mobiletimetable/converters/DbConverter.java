@@ -36,6 +36,20 @@ public class DbConverter {
         return teacher;
     }
 
+    public List<String> teacherToStringConverter(List<Teacher> itemsList) {
+        List<String> resultList = new ArrayList<>();
+        for (Teacher item : itemsList) {
+            resultList.add(teacherToStringConverter(item));
+        }
+        return resultList;
+    }
+
+    public String teacherToStringConverter(Teacher item) {
+        return item.name;
+    }
+
+
+
     public List<Group> groupConverter(List<GroupResponseModel> itemsList) {
         List<Group> resultList = new ArrayList<>();
         for (GroupResponseModel item : itemsList) {
@@ -63,18 +77,6 @@ public class DbConverter {
     }
 
     public String groupToStringConverter(Group item) {
-        return item.name;
-    }
-
-    public List<String> teacherToStringConverter(List<Teacher> itemsList) {
-        List<String> resultList = new ArrayList<>();
-        for (Teacher item : itemsList) {
-            resultList.add(teacherToStringConverter(item));
-        }
-        return resultList;
-    }
-
-    public String teacherToStringConverter(Teacher item) {
         return item.name;
     }
 

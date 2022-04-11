@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cats.mobiletimetable.adapters.LessonListAdapter;
+import com.cats.mobiletimetable.adapters.GroupLessonListAdapter;
 import com.cats.mobiletimetable.api.AppApi;
 import com.cats.mobiletimetable.api.FaApi;
 import com.cats.mobiletimetable.api.RuzApi;
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     Calendar myCalendar = Calendar.getInstance();
     EditText dateSelectEditText;
     RecyclerView timetableRecyclerView;
-    LessonListAdapter lessonListAdapter;
+    GroupLessonListAdapter groupLessonListAdapter;
     RuzApi ruzApi;
     FaApi faApi;
     AppDatabase db;
@@ -100,11 +100,15 @@ public class MainActivity extends AppCompatActivity {
         faApi = AppApi.getFaApiInstance(getApplicationContext());
         converter = new DbConverter(db);
 
-        initRecycleView();
-        loadRecordList();
+        //TODO Обновляем раз в недельку или если нет вообще записей
         syncGroupsApiData();
         syncTeachersApiData();
+
+
+        initRecycleView();
+        loadRecordList();
         loadApiData();
+
 
     }
 
@@ -235,13 +239,13 @@ public class MainActivity extends AppCompatActivity {
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         timetableRecyclerView.addItemDecoration(dividerItemDecoration);
-        lessonListAdapter = new LessonListAdapter(this);
-        timetableRecyclerView.setAdapter(lessonListAdapter);
+        groupLessonListAdapter = new GroupLessonListAdapter(this);
+        timetableRecyclerView.setAdapter(groupLessonListAdapter);
     }
 
     private void loadRecordList() {
         List<LessonWithDetails> recordList = db.lessonDao().getAllLessonsWithDetails();
-        lessonListAdapter.setLessonList(recordList);
+        groupLessonListAdapter.setLessonList(recordList);
     }
 
     private void updateLabel() {
