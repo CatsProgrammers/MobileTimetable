@@ -3,6 +3,7 @@ package com.cats.mobiletimetable;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,32 +13,28 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cats.mobiletimetable.adapters.GroupLessonListAdapter;
 import com.cats.mobiletimetable.api.AppApi;
 import com.cats.mobiletimetable.api.FaApi;
 import com.cats.mobiletimetable.api.RuzApi;
 import com.cats.mobiletimetable.api.responsemodels.GroupResponseModel;
-import com.cats.mobiletimetable.api.responsemodels.LessonResponseModel;
 import com.cats.mobiletimetable.api.responsemodels.TeacherResponseModel;
 import com.cats.mobiletimetable.converters.GroupConverter;
-import com.cats.mobiletimetable.converters.LessonConverter;
 import com.cats.mobiletimetable.converters.TeacherConverter;
 import com.cats.mobiletimetable.db.AppDatabase;
-import com.cats.mobiletimetable.db.relations.LessonWithDetails;
 import com.cats.mobiletimetable.db.tables.Group;
-import com.cats.mobiletimetable.db.tables.Lesson;
 import com.cats.mobiletimetable.db.tables.Setting;
 import com.cats.mobiletimetable.db.tables.Teacher;
+import com.cats.mobiletimetable.recycleviewinits.GroupRecycleViewInit;
+import com.cats.mobiletimetable.recycleviewinits.SuperRecycleViewInit;
+import com.cats.mobiletimetable.recycleviewinits.TeacherRecycleViewInit;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -50,13 +47,14 @@ public class MainActivity extends AppCompatActivity {
 
     Calendar myCalendar = Calendar.getInstance();
     EditText dateSelectEditText;
-    RecyclerView timetableRecyclerView;
-    GroupLessonListAdapter groupLessonListAdapter;
+    RecyclerView recyclerView;
+
     RuzApi ruzApi;
     FaApi faApi;
     AppDatabase db;
     DateTimeFormatter formatter;
 
+    SuperRecycleViewInit recycleViewInit;
     ActivityResultLauncher<Intent> startActivityForResult;
 
     @Override
@@ -65,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         dateSelectEditText = findViewById(R.id.dateEditText);
+        recyclerView = findViewById(R.id.timetableRecyclerView);
 
         //Обработка активности с выбором даты
         DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -85,13 +84,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Когда возвращаемся с настроек - обновляем расписание
-        startActivityForResult = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    loadApiData();
-                }
-        );
 
         formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         dateSelectEditText.setText(formatter.format(LocalDate.now()));
@@ -100,15 +92,39 @@ public class MainActivity extends AppCompatActivity {
         ruzApi = AppApi.getRuzApiInstance(getApplicationContext());
         faApi = AppApi.getFaApiInstance(getApplicationContext());
 
+
+        List<String> userTypes = Arrays.asList(getResources().getStringArray(R.array.user_types));
+
         //TODO Обновляем раз в недельку или если нет вообще записей
         syncGroupsApiData();
         syncTeachersApiData();
 
 
-        initRecycleView();
-        loadRecordList();
-        loadApiData();
+        Setting currentUserType = db.settingsDao().getItemByName(Utils.userTypeSettingsKey);
+        if ((currentUserType != null) && (currentUserType.value.equals(userTypes.get(0)))){
+            Log.i("INIT", "MODE: group");
+            recycleViewInit = new GroupRecycleViewInit(this, recyclerView, myCalendar);
+        }
+        else{
+            Log.i("INIT", "MODE: teacher");
+            recycleViewInit = new TeacherRecycleViewInit(this, recyclerView, myCalendar);
+        }
 
+
+        //Когда возвращаемся с настроек - обновляем расписание
+        startActivityForResult = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    recycleViewInit.loadApiData();
+
+                    //TODO: Как-то поменять (?)
+                    //if
+                }
+        );
+
+        recycleViewInit.initRecycleView();
+        recycleViewInit.loadRecordList();
+        recycleViewInit.loadApiData();
 
     }
 
@@ -171,92 +187,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void loadApiData() {
-        Setting currentGroup = db.settingsDao().getItemByName("currentGroup");
-        //Если группу еще не устанавливали
-        if (currentGroup == null) {
-            Toast.makeText(getApplicationContext(), "Выберите группу в настройках", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
-        String startDate = Utils.stringFormater(myCalendar.getTime());
-        String endDate = Utils.stringFormater(myCalendar.getTime());
 
-        Call<List<GroupResponseModel>> groupCall = ruzApi.getGroupByString(currentGroup.value);
-        groupCall.enqueue(new Callback<List<GroupResponseModel>>() {
-            @Override
-            public void onResponse(Call<List<GroupResponseModel>> call, Response<List<GroupResponseModel>> response) {
-                if ((response.isSuccessful()) && (response.body() != null)) {
-                    GroupResponseModel currentGroup = response.body().get(0);
-                    loadLessonData(currentGroup.id, startDate, endDate);
-                } else {
-                    Toast.makeText(getApplicationContext(), "Server returned an error", Toast.LENGTH_SHORT).show();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<List<GroupResponseModel>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Connection error: " + t, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
-    private void loadLessonData(@NonNull String groupId, @NonNull String start, @NonNull String finish) {
-        LessonConverter lessonConverter = new LessonConverter(db);
-        Call<List<LessonResponseModel>> call = ruzApi.getTimetableByGroup(groupId, start, finish, 1);
-        call.enqueue(new Callback<List<LessonResponseModel>>() {
-            @Override
-            public void onResponse(Call<List<LessonResponseModel>> call, Response<List<LessonResponseModel>> response) {
-
-                if (response.isSuccessful()) {
-
-                    assert response.body() != null;
-
-                    db.lessonDao().deleteAll();
-                    List<Lesson> lessonList = lessonConverter.convertToEntity(response.body());
-
-                    for (Lesson lesson : lessonList) {
-                        db.lessonDao().insertLesson(lesson);
-                    }
-
-                    //List<LessonWithDetails> recordList = db.lessonDao().getAllLessonsWithDetails();
-                    //lessonListAdapter.setLessonList(recordList);
-                    loadRecordList();
-
-                    Toast.makeText(getApplicationContext(), "Успешно обновил расписание", Toast.LENGTH_SHORT).show();
-
-                } else {
-                    Toast.makeText(getApplicationContext(), "Server returned an error", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<LessonResponseModel>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Connection error: " + t, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void initRecycleView() {
-
-        timetableRecyclerView = findViewById(R.id.timetableRecyclerView);
-        timetableRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        timetableRecyclerView.addItemDecoration(dividerItemDecoration);
-        groupLessonListAdapter = new GroupLessonListAdapter(this);
-        timetableRecyclerView.setAdapter(groupLessonListAdapter);
-    }
-
-    private void loadRecordList() {
-        List<LessonWithDetails> recordList = db.lessonDao().getAllLessonsWithDetails();
-        groupLessonListAdapter.setLessonList(recordList);
-    }
 
     private void updateLabel() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
         dateSelectEditText.setText(dateFormat.format(myCalendar.getTime()));
-        loadApiData();
+        recycleViewInit.loadApiData();
     }
 
 

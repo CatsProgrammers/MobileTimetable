@@ -2,6 +2,7 @@ package com.cats.mobiletimetable.api;
 
 import com.cats.mobiletimetable.api.responsemodels.GroupResponseModel;
 import com.cats.mobiletimetable.api.responsemodels.LessonResponseModel;
+import com.cats.mobiletimetable.api.responsemodels.TeacherResponseModel;
 
 import java.util.List;
 
@@ -18,6 +19,13 @@ public interface RuzApi {
 
     @GET("api/search?type=group")
     Call<List<GroupResponseModel>> getGroupByString(@Query("term") String term);
+
+    @GET("api/search?type=teacher")
+    Call<List<TeacherResponseModel>> getTeacherByString(@Query("term") String term);
+
+    @GET("api/schedule/person/{teacher}")
+    Call<List<LessonResponseModel>> getTimetableByTeacher(@Path("teacher") String teacher, @Query("start") String start, @Query("finish") String finish, @Query("lng") int lng);
+
 }
 
 

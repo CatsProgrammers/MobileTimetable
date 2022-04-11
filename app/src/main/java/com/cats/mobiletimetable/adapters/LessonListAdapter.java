@@ -18,13 +18,13 @@ import com.cats.mobiletimetable.db.relations.LessonWithDetails;
 import java.util.List;
 
 
-public class GroupLessonListAdapter extends RecyclerView.Adapter<GroupLessonListAdapter.MyViewHolder> {
+public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.MyViewHolder> {
 
     public List<LessonWithDetails> lessonList;
     private Context context;
     private AppDatabase db;
 
-    public GroupLessonListAdapter(Context context) {
+    public LessonListAdapter(Context context) {
         this.context = context;
         db = AppDatabase.getDbInstance(context);
     }
