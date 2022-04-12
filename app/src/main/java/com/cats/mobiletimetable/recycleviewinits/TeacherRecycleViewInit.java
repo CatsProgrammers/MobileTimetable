@@ -10,12 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cats.mobiletimetable.Utils;
 import com.cats.mobiletimetable.adapters.LessonListAdapter;
-import com.cats.mobiletimetable.api.AppApi;
-import com.cats.mobiletimetable.api.RuzApi;
 import com.cats.mobiletimetable.api.responsemodels.LessonResponseModel;
 import com.cats.mobiletimetable.api.responsemodels.TeacherResponseModel;
 import com.cats.mobiletimetable.converters.LessonConverter;
-import com.cats.mobiletimetable.db.AppDatabase;
 import com.cats.mobiletimetable.db.relations.LessonWithDetails;
 import com.cats.mobiletimetable.db.tables.Lesson;
 import com.cats.mobiletimetable.db.tables.Setting;
@@ -27,27 +24,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TeacherRecycleViewInit implements SuperRecycleViewInit {
+public class TeacherRecycleViewInit extends AbstractRecycleViewInit {
 
-    Calendar calendar;
-    Context context;
-    RecyclerView recyclerView;
-    AppDatabase db;
-    RuzApi ruzApi;
-    LessonListAdapter lessonListAdapter;
-
-    //TODO вытащить куда-нибудь конструктор (?)
     public TeacherRecycleViewInit(Context context, RecyclerView recyclerView, Calendar calendar) {
-        this.context = context;
-        this.recyclerView = recyclerView;
-        this.calendar = calendar;
-
-        db = AppDatabase.getDbInstance(context);
-        ruzApi = AppApi.getRuzApiInstance(context);
-
-        initRecycleView();
-        loadRecordList();
-        loadApiData();
+        super(context, recyclerView, calendar);
     }
 
     @Override
