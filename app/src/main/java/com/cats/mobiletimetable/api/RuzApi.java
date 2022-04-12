@@ -20,7 +20,7 @@ public interface RuzApi {
     @GET("api/search?type=group")
     Call<List<GroupResponseModel>> getGroupByString(@Query("term") String term);
 
-    @GET("api/search?type=teacher")
+    @GET("api/search?type=person")
     Call<List<TeacherResponseModel>> getTeacherByString(@Query("term") String term);
 
     @GET("api/schedule/person/{teacher}")

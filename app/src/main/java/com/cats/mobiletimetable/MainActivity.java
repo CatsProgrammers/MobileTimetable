@@ -3,7 +3,6 @@ package com.cats.mobiletimetable;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,9 +26,8 @@ import com.cats.mobiletimetable.db.AppDatabase;
 import com.cats.mobiletimetable.db.tables.Group;
 import com.cats.mobiletimetable.db.tables.Setting;
 import com.cats.mobiletimetable.db.tables.Teacher;
-import com.cats.mobiletimetable.recycleviewinits.GroupRecycleViewInit;
+import com.cats.mobiletimetable.recycleviewinits.RecycleViewCreator;
 import com.cats.mobiletimetable.recycleviewinits.SuperRecycleViewInit;
-import com.cats.mobiletimetable.recycleviewinits.TeacherRecycleViewInit;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -54,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     AppDatabase db;
     DateTimeFormatter formatter;
 
+    Setting currentUserType;
     SuperRecycleViewInit recycleViewInit;
     ActivityResultLauncher<Intent> startActivityForResult;
 
@@ -100,31 +99,17 @@ public class MainActivity extends AppCompatActivity {
         syncTeachersApiData();
 
 
-        Setting currentUserType = db.settingsDao().getItemByName(Utils.userTypeSettingsKey);
-        if ((currentUserType != null) && (currentUserType.value.equals(userTypes.get(0)))){
-            Log.i("INIT", "MODE: group");
-            recycleViewInit = new GroupRecycleViewInit(this, recyclerView, myCalendar);
-        }
-        else{
-            Log.i("INIT", "MODE: teacher");
-            recycleViewInit = new TeacherRecycleViewInit(this, recyclerView, myCalendar);
-        }
-
+        currentUserType = db.settingsDao().getItemByName(Utils.userTypeSettingsKey);
+        recycleViewInit = RecycleViewCreator.createInstance(currentUserType, this, recyclerView, myCalendar);
 
         //Когда возвращаемся с настроек - обновляем расписание
         startActivityForResult = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    recycleViewInit.loadApiData();
-
-                    //TODO: Как-то поменять (?)
-                    //if
+                    currentUserType = db.settingsDao().getItemByName(Utils.userTypeSettingsKey);
+                    recycleViewInit = RecycleViewCreator.createInstance(currentUserType, this, recyclerView, myCalendar);
                 }
         );
-
-        recycleViewInit.initRecycleView();
-        recycleViewInit.loadRecordList();
-        recycleViewInit.loadApiData();
 
     }
 
@@ -186,11 +171,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
-
-
 
     private void updateLabel() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());

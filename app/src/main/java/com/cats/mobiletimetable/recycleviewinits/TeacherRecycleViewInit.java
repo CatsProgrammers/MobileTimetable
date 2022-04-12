@@ -36,13 +36,18 @@ public class TeacherRecycleViewInit implements SuperRecycleViewInit {
     RuzApi ruzApi;
     LessonListAdapter lessonListAdapter;
 
-    public TeacherRecycleViewInit(Context context, RecyclerView recyclerView, Calendar calendar){
+    //TODO вытащить куда-нибудь конструктор (?)
+    public TeacherRecycleViewInit(Context context, RecyclerView recyclerView, Calendar calendar) {
         this.context = context;
         this.recyclerView = recyclerView;
         this.calendar = calendar;
 
         db = AppDatabase.getDbInstance(context);
         ruzApi = AppApi.getRuzApiInstance(context);
+
+        initRecycleView();
+        loadRecordList();
+        loadApiData();
     }
 
     @Override
@@ -64,8 +69,8 @@ public class TeacherRecycleViewInit implements SuperRecycleViewInit {
     }
 
     @Override
-    public void loadApiData(){
-        
+    public void loadApiData() {
+
         String startDate = Utils.stringFormater(calendar.getTime());
         String endDate = Utils.stringFormater(calendar.getTime());
 
@@ -97,7 +102,6 @@ public class TeacherRecycleViewInit implements SuperRecycleViewInit {
     }
 
     private void loadLessonData(@NonNull String teacherId, @NonNull String start, @NonNull String finish) {
-        //TODO глянуть
         LessonConverter lessonConverter = new LessonConverter(db);
         Call<List<LessonResponseModel>> call = ruzApi.getTimetableByTeacher(teacherId, start, finish, 1);
         call.enqueue(new Callback<List<LessonResponseModel>>() {

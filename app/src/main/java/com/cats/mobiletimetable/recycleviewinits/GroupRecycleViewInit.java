@@ -27,7 +27,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-//TODO:
+
 public class GroupRecycleViewInit implements SuperRecycleViewInit {
 
     Calendar calendar;
@@ -37,13 +37,18 @@ public class GroupRecycleViewInit implements SuperRecycleViewInit {
     RuzApi ruzApi;
     LessonListAdapter lessonListAdapter;
 
-    public GroupRecycleViewInit(Context context, RecyclerView recyclerView, Calendar calendar){
+    //TODO вытащить куда-нибудь конструктор (?)
+    public GroupRecycleViewInit(Context context, RecyclerView recyclerView, Calendar calendar) {
         this.context = context;
         this.recyclerView = recyclerView;
         this.calendar = calendar;
 
         db = AppDatabase.getDbInstance(context);
         ruzApi = AppApi.getRuzApiInstance(context);
+
+        initRecycleView();
+        loadRecordList();
+        loadApiData();
     }
 
     @Override

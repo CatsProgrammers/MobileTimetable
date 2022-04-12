@@ -3,47 +3,26 @@ package com.cats.mobiletimetable.recycleviewinits;
 import android.content.Context;
 import android.util.Log;
 
-import com.cats.mobiletimetable.Utils;
-import com.cats.mobiletimetable.api.FaApi;
-import com.cats.mobiletimetable.api.RuzApi;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.cats.mobiletimetable.R;
 import com.cats.mobiletimetable.db.tables.Setting;
 
-import okhttp3.internal.Util;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
 
 public abstract class RecycleViewCreator {
+    
+    public static SuperRecycleViewInit createInstance(Setting setting, Context context, RecyclerView recyclerView, Calendar calendar) {
 
-    private GroupRecycleViewInit groupRecycleViewInit;
-    private TeacherRecycleViewInit teacherRecycleViewInit;
+        List<String> userTypes = Arrays.asList(context.getResources().getStringArray(R.array.user_types));
 
-    //TODO
-    private static SuperRecycleViewInit createInstance(Setting setting) {
-
-        //
-        userTypes
-
-        if ((setting == null) || (setting.value.equals(userTypes.get(0)))){
+        if ((setting == null) || (setting.value.equals(userTypes.get(0)))) {
             Log.i("INIT", "MODE: group");
-            recycleViewInit = new GroupRecycleViewInit(this, recyclerView, myCalendar);
+            return new GroupRecycleViewInit(context, recyclerView, calendar);
         }
-        else{
-            Log.i("INIT", "MODE: teacher");
-            recycleViewInit = new TeacherRecycleViewInit(this, recyclerView, myCalendar);
-        }
-
-
-
-        if (ruzApi == null) {
-            Retrofit retrofit = new Retrofit.Builder().baseUrl(ruzBaseUrl).addConverterFactory(GsonConverterFactory.create()).build();
-            ruzApi = retrofit.create(RuzApi.class);
-        }
-        return ruzApi;
+        Log.i("INIT", "MODE: teacher");
+        return new TeacherRecycleViewInit(context, recyclerView, calendar);
     }
-
-
-    getInstance
-
-
-
 }
