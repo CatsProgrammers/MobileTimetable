@@ -25,6 +25,7 @@ public class LessonConverter extends AbstractConverter<LessonResponseModel, Less
         lesson.endLesson = model.endLesson;
         lesson.url = model.url1;
         lesson.auditorium = model.auditorium;
+        lesson.date = model.date;
 
         //Если нет потока, то значит, что это конкретная группа
         if (model.stream == null) {

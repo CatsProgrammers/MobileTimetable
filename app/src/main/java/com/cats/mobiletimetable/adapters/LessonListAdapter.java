@@ -45,14 +45,16 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
-        //TODO: Если дата у предыдущего урока не совпадает с текущей - показываем хедер
-        if ((position == 0) || (false)) {
+        LessonWithDetails currentLesson = lessonList.get(position);
+
+        //Если дата у предыдущего урока не совпадает с текущей - показываем хедер
+        if ((position == 0) || (!lessonList.get(position - 1).lesson.date.equals(currentLesson.lesson.date))) {
             holder.headerLayout.setVisibility(View.VISIBLE);
+            //TODO: тут ставим красивый текст в красивом формате
+            holder.headerTextView.setText(currentLesson.lesson.date);
         } else {
             holder.headerLayout.setVisibility(View.GONE);
         }
-
-        LessonWithDetails currentLesson = lessonList.get(position);
 
         holder.title.setText(currentLesson.lesson.name);
         holder.auditorium.setText(currentLesson.lesson.auditorium);
@@ -92,6 +94,7 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         LinearLayout headerLayout;
+        TextView headerTextView;
         TextView title;
         TextView auditorium;
         TextView group;
@@ -105,6 +108,7 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
             super(view);
 
             headerLayout = view.findViewById(R.id.headerLayout);
+            headerTextView = view.findViewById(R.id.headerTextView);
             title = view.findViewById(R.id.titleTextView);
             auditorium = view.findViewById(R.id.auditoriumTextView);
             group = view.findViewById(R.id.groupTextView);

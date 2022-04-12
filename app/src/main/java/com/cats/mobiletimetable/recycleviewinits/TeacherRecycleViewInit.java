@@ -34,9 +34,7 @@ public class TeacherRecycleViewInit extends AbstractRecycleViewInit {
     public void initRecycleView() {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context, DividerItemDecoration.VERTICAL);
-        recyclerView.addItemDecoration(dividerItemDecoration);
+        recyclerView.addItemDecoration(new DividerItemDecoration(context, 0));
         lessonListAdapter = new LessonListAdapter(context);
         recyclerView.setAdapter(lessonListAdapter);
 
@@ -51,8 +49,8 @@ public class TeacherRecycleViewInit extends AbstractRecycleViewInit {
     @Override
     public void loadApiData() {
 
-        String startDate = Utils.stringFormater(calendar.getTime());
-        String endDate = Utils.stringFormater(calendar.getTime());
+        String startDate = Utils.stringFormatter(calendar.getTime());
+        String endDate = Utils.getNextWeekDateString(calendar.getTime());
 
         Setting teacherSetting = db.settingsDao().getItemByName(Utils.teacherSettingsKey);
         //Если препода еще не устанавливали

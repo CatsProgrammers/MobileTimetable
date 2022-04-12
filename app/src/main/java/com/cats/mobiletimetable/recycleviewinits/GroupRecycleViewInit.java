@@ -35,9 +35,7 @@ public class GroupRecycleViewInit extends AbstractRecycleViewInit {
     public void initRecycleView() {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context, DividerItemDecoration.VERTICAL);
-        recyclerView.addItemDecoration(dividerItemDecoration);
+        recyclerView.addItemDecoration(new DividerItemDecoration(context, 0));
         lessonListAdapter = new LessonListAdapter(context);
         recyclerView.setAdapter(lessonListAdapter);
     }
@@ -51,8 +49,8 @@ public class GroupRecycleViewInit extends AbstractRecycleViewInit {
     @Override
     public void loadApiData() {
 
-        String startDate = Utils.stringFormater(calendar.getTime());
-        String endDate = Utils.stringFormater(calendar.getTime());
+        String startDate = Utils.stringFormatter(calendar.getTime());
+        String endDate = Utils.getNextWeekDateString(calendar.getTime());
 
         Setting groupSetting = db.settingsDao().getItemByName(Utils.groupSettingsKey);
         //Если группу еще не устанавливали

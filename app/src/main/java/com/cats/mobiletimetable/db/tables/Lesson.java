@@ -20,6 +20,8 @@ public class Lesson extends BaseTable {
 
     public String stream;
 
+    public String date;
+
     @ColumnInfo(name = "teacher_id")
     public long teacherId;
 
