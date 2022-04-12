@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +45,15 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
+        //TODO: Если дата у предыдущего урока не совпадает с текущей - показываем хедер
+        if ((position == 0) || (false)) {
+            holder.headerLayout.setVisibility(View.VISIBLE);
+        } else {
+            holder.headerLayout.setVisibility(View.GONE);
+        }
+
         LessonWithDetails currentLesson = lessonList.get(position);
+
         holder.title.setText(currentLesson.lesson.name);
         holder.auditorium.setText(currentLesson.lesson.auditorium);
         holder.place.setText(currentLesson.building.label);
@@ -69,7 +78,6 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
         holder.lessonTypeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Toast.makeText(context, currentLesson.kindOfWork.name, Toast.LENGTH_SHORT).show();
             }
         });
@@ -83,6 +91,7 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
+        LinearLayout headerLayout;
         TextView title;
         TextView auditorium;
         TextView group;
@@ -95,6 +104,7 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
         public MyViewHolder(View view) {
             super(view);
 
+            headerLayout = view.findViewById(R.id.headerLayout);
             title = view.findViewById(R.id.titleTextView);
             auditorium = view.findViewById(R.id.auditoriumTextView);
             group = view.findViewById(R.id.groupTextView);
