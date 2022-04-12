@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cats.mobiletimetable.R;
-import com.cats.mobiletimetable.db.AppDatabase;
+import com.cats.mobiletimetable.Utils;
 import com.cats.mobiletimetable.db.relations.LessonWithDetails;
 
 import java.util.List;
@@ -23,11 +23,9 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
 
     public List<LessonWithDetails> lessonList;
     private Context context;
-    private AppDatabase db;
 
     public LessonListAdapter(Context context) {
         this.context = context;
-        db = AppDatabase.getDbInstance(context);
     }
 
     public void setLessonList(List<LessonWithDetails> lessonList) {
@@ -50,8 +48,7 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
         //Если дата у предыдущего урока не совпадает с текущей - показываем хедер
         if ((position == 0) || (!lessonList.get(position - 1).lesson.date.equals(currentLesson.lesson.date))) {
             holder.headerLayout.setVisibility(View.VISIBLE);
-            //TODO: тут ставим красивый текст в красивом формате
-            holder.headerTextView.setText(currentLesson.lesson.date);
+            holder.headerTextView.setText(Utils.headerDateFormatter(currentLesson.lesson.date));
         } else {
             holder.headerLayout.setVisibility(View.GONE);
         }
