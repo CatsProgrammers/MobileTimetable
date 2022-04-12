@@ -7,7 +7,7 @@
     tools:context=".SettingsActivity">
 
     <TextView
-        android:id="@+id/grouptextView"
+        android:id="@+id/criteriaTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -28,7 +28,7 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/grouptextView" />
+        app:layout_constraintTop_toBottomOf="@+id/criteriaTextView" />
 
     <TextView
         android:id="@+id/userTypeTextView"

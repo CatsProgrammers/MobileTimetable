@@ -7,6 +7,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +26,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     List<String> userTypes;
     AutoCompleteTextView autoCompleteTextView;
+    TextView criteriaTextView;
 
     Spinner spinner;
     AppDatabase db;
@@ -38,6 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         autoCompleteTextView = findViewById(R.id.autoCompleteTextView);
         spinner = findViewById(R.id.userTypeSpinner);
+        criteriaTextView = findViewById(R.id.criteriaTextView);
 
         db = AppDatabase.getDbInstance(getApplicationContext());
         api = AppApi.getRuzApiInstance(getApplicationContext());
@@ -56,12 +59,11 @@ public class SettingsActivity extends AppCompatActivity {
         } else if (spinner.getSelectedItem().equals(userTypes.get(1))) {
             teacherTypeInit();
         }
-        //TODO: Аудитория (?)
     }
 
     private void spinnerInit() {
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, userTypes);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item, userTypes);
         spinner.setAdapter(adapter);
 
         //Если был выбран какой-либо тип - отображаем его
@@ -109,6 +111,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         Setting item = db.settingsDao().getItemByName(teacherSettingsKey);
 
+        criteriaTextView.setText("Выбранный преподаватель:");
+        autoCompleteTextView.setText("");
         if (item != null) {
             autoCompleteTextView.setText(item.value);
         }
@@ -150,6 +154,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         Setting item = db.settingsDao().getItemByName(groupSettingsKey);
 
+        criteriaTextView.setText("Выбранная группа:");
+        autoCompleteTextView.setText("");
         if (item != null) {
             autoCompleteTextView.setText(item.value);
         }
