@@ -3,6 +3,7 @@ package com.cats.mobiletimetable;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -91,14 +92,7 @@ public class MainActivity extends AppCompatActivity {
         ruzApi = AppApi.getRuzApiInstance(getApplicationContext());
         faApi = AppApi.getFaApiInstance(getApplicationContext());
 
-
-        List<String> userTypes = Arrays.asList(getResources().getStringArray(R.array.user_types));
-
-        //TODO Обновляем раз в недельку или если нет вообще записей
-        syncGroupsApiData();
-        syncTeachersApiData();
-
-
+        apiDataSync();
         currentUserType = db.settingsDao().getItemByName(Utils.userTypeSettingsKey);
         recycleViewInit = RecycleViewCreator.createInstance(currentUserType, this, recyclerView, myCalendar);
 
@@ -113,7 +107,35 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Синхронизация групп и преподавателей, если это необходимо
+     */
+    private void apiDataSync(){
 
+        Setting syncTime = db.settingsDao().getItemByName(Utils.timeSyncSettingsKey);
+        long currentTime = System.currentTimeMillis() / 1000L;
+
+        //Если прошло более недели после последней синхронизации - обновляем данные
+        if ((syncTime == null) || (currentTime-Long.parseLong(syncTime.value) > 604800)) {
+
+            syncGroupsApiData();
+            syncTeachersApiData();
+
+            //Удаляем стврое значение
+            db.settingsDao().deleteItem(Utils.timeSyncSettingsKey);
+
+            //Добавляем новое значение
+            Setting setting = new Setting();
+            setting.name = Utils.timeSyncSettingsKey;
+            setting.value = String.valueOf(currentTime);
+            db.settingsDao().insertItem(setting);
+        }
+
+    }
+
+    /**
+     * Синхронизация списка всех преподавателей с БД
+     */
     private void syncTeachersApiData() {
 
         TeacherConverter teacherConverter = new TeacherConverter();
@@ -172,20 +194,32 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Обеновление данных в календаре
+     */
     private void updateLabel() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
         dateSelectEditText.setText(dateFormat.format(myCalendar.getTime()));
+        //Обновляем данные расписания
         recycleViewInit.loadApiData();
     }
 
 
-    // создание меню из XML
+    /**
+     * Создание меню из XML
+     * @param menu
+     * @return
+     */
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
-    // обработка нажатий на меню
+    /**
+     * Обработка нажатий на меню
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
