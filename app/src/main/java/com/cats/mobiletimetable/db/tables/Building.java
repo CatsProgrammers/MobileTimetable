@@ -6,5 +6,4 @@ import androidx.room.Entity;
 public class Building extends BaseTable {
 
     public String label;
-
 }

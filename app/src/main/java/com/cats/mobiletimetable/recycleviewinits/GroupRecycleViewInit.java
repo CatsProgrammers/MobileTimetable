@@ -96,8 +96,6 @@ public class GroupRecycleViewInit extends AbstractRecycleViewInit {
                         db.lessonDao().insertLesson(lesson);
                     }
 
-                    //List<LessonWithDetails> recordList = db.lessonDao().getAllLessonsWithDetails();
-                    //lessonListAdapter.setLessonList(recordList);
                     loadRecordList();
 
                     Toast.makeText(context, "Успешно обновил расписание", Toast.LENGTH_SHORT).show();

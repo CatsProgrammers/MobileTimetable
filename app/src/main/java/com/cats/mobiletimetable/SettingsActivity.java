@@ -46,8 +46,8 @@ public class SettingsActivity extends AppCompatActivity {
         api = AppApi.getRuzApiInstance(getApplicationContext());
 
         userTypes = Arrays.asList(getResources().getStringArray(R.array.user_types));
-        spinnerInit();
 
+        spinnerInit();
         spinnerBaseInit();
 
     }
@@ -63,7 +63,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void spinnerInit() {
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item, userTypes);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, userTypes);
         spinner.setAdapter(adapter);
 
         //Если был выбран какой-либо тип - отображаем его
@@ -121,25 +121,22 @@ public class SettingsActivity extends AppCompatActivity {
         autoCompleteTextView.setAdapter(teacherListAdapter);
 
         //Когда нажимаем на наш AutoCompleteTextView
-        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> p, View v, int pos, long id) {
+        autoCompleteTextView.setOnItemClickListener((p, v, pos, id) -> {
 
-                String currentTeacherString = autoCompleteTextView.getText().toString();
+            String currentTeacherString = autoCompleteTextView.getText().toString();
 
-                //Если есть уже какое-то значение в БД, то удаляем его
-                if (db.settingsDao().getItemByName(teacherSettingsKey) != null) {
-                    db.settingsDao().deleteItem(teacherSettingsKey);
-                }
-
-                Setting item = new Setting();
-                item.name = teacherSettingsKey;
-                item.value = currentTeacherString;
-                db.settingsDao().insertItem(item);
-
-                Toast.makeText(getApplicationContext(), "Преподаватель " + currentTeacherString + " выбран", Toast.LENGTH_SHORT).show();
-
+            //Если есть уже какое-то значение в БД, то удаляем его
+            if (db.settingsDao().getItemByName(teacherSettingsKey) != null) {
+                db.settingsDao().deleteItem(teacherSettingsKey);
             }
+
+            Setting item1 = new Setting();
+            item1.name = teacherSettingsKey;
+            item1.value = currentTeacherString;
+            db.settingsDao().insertItem(item1);
+
+            Toast.makeText(getApplicationContext(), "Преподаватель " + currentTeacherString + " выбран", Toast.LENGTH_SHORT).show();
+
         });
 
     }
@@ -164,25 +161,22 @@ public class SettingsActivity extends AppCompatActivity {
         ArrayAdapter<String> groupListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, groupsList);
         autoCompleteTextView.setAdapter(groupListAdapter);
         //Когда нажимаем на наш AutoCompleteTextView
-        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> p, View v, int pos, long id) {
+        autoCompleteTextView.setOnItemClickListener((p, v, pos, id) -> {
 
-                String currentGroupString = autoCompleteTextView.getText().toString();
+            String currentGroupString = autoCompleteTextView.getText().toString();
 
-                //Если есть уже какое-то значение в БД, то удаляем его
-                if (db.settingsDao().getItemByName(groupSettingsKey) != null) {
-                    db.settingsDao().deleteItem(groupSettingsKey);
-                }
-
-                Setting item = new Setting();
-                item.name = groupSettingsKey;
-                item.value = currentGroupString;
-                db.settingsDao().insertItem(item);
-
-                Toast.makeText(getApplicationContext(), "Группа " + currentGroupString + " выбрана", Toast.LENGTH_SHORT).show();
-
+            //Если есть уже какое-то значение в БД, то удаляем его
+            if (db.settingsDao().getItemByName(groupSettingsKey) != null) {
+                db.settingsDao().deleteItem(groupSettingsKey);
             }
+
+            Setting item1 = new Setting();
+            item1.name = groupSettingsKey;
+            item1.value = currentGroupString;
+            db.settingsDao().insertItem(item1);
+
+            Toast.makeText(getApplicationContext(), "Группа " + currentGroupString + " выбрана", Toast.LENGTH_SHORT).show();
+
         });
 
     }

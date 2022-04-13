@@ -74,12 +74,7 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
                 break;
         }
 
-        holder.lessonTypeImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, currentLesson.kindOfWork.name, Toast.LENGTH_SHORT).show();
-            }
-        });
+        holder.lessonTypeImage.setOnClickListener(v -> Toast.makeText(context, currentLesson.kindOfWork.name, Toast.LENGTH_SHORT).show());
 
     }
 

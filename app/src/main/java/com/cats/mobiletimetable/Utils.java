@@ -23,8 +23,7 @@ public class Utils {
      * @return - строка в формате, которое воспринимает внешнее API
      */
     public static String stringFormatter(Date date) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd");
-        return formatter.format(date);
+        return new SimpleDateFormat("yyyy.MM.dd").format(date);
     }
 
     /**

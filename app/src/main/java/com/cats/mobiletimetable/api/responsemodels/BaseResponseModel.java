@@ -1,4 +1,4 @@
 package com.cats.mobiletimetable.api.responsemodels;
 
-public class BaseResponseModel {
+public abstract class BaseResponseModel {
 }
