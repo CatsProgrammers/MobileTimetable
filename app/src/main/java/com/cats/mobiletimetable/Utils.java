@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 public class Utils {
 
@@ -16,6 +15,7 @@ public class Utils {
     public final static String teacherSettingsKey = "currentTeacher";
 
     public final static String timeSyncSettingsKey = "apiTimeSync";
+
     /**
      * Форматер для API, отдает форматированные даты
      *
@@ -67,8 +67,13 @@ public class Utils {
         return stringFormatter(getNextWeekDate(currentDate));
     }
 
-    public static SimpleDateFormat getCalendarFormatter() {
-        return new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+    /**
+     * Получение форматера для календаря
+     *
+     * @return
+     */
+    public static DateTimeFormatter getCalendarFormatter() {
+        return DateTimeFormatter.ofPattern("dd.MM.yyyy");
     }
 
 }

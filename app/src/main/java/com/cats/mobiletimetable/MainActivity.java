@@ -3,7 +3,6 @@ package com.cats.mobiletimetable;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,13 +29,11 @@ import com.cats.mobiletimetable.db.tables.Teacher;
 import com.cats.mobiletimetable.recycleviewinits.RecycleViewCreator;
 import com.cats.mobiletimetable.recycleviewinits.SuperRecycleViewInit;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
     RuzApi ruzApi;
     FaApi faApi;
     AppDatabase db;
-    DateTimeFormatter formatter;
 
     Setting currentUserType;
     SuperRecycleViewInit recycleViewInit;
@@ -85,8 +81,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        dateSelectEditText.setText(formatter.format(LocalDate.now()));
+        dateSelectEditText.setText(Utils.getCalendarFormatter().format(LocalDate.now()));
 
         db = AppDatabase.getDbInstance(getApplicationContext());
         ruzApi = AppApi.getRuzApiInstance(getApplicationContext());
@@ -110,13 +105,13 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Синхронизация групп и преподавателей, если это необходимо
      */
-    private void apiDataSync(){
+    private void apiDataSync() {
 
         Setting syncTime = db.settingsDao().getItemByName(Utils.timeSyncSettingsKey);
         long currentTime = System.currentTimeMillis() / 1000L;
 
         //Если прошло более недели после последней синхронизации - обновляем данные
-        if ((syncTime == null) || (currentTime-Long.parseLong(syncTime.value) > 604800)) {
+        if ((syncTime == null) || (currentTime - Long.parseLong(syncTime.value) > 604800)) {
 
             syncGroupsApiData();
             syncTeachersApiData();
@@ -132,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
 
     /**
      * Синхронизация списка всех преподавателей с БД
@@ -198,8 +194,9 @@ public class MainActivity extends AppCompatActivity {
      * Обеновление данных в календаре
      */
     private void updateLabel() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-        dateSelectEditText.setText(dateFormat.format(myCalendar.getTime()));
+
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(myCalendar.toInstant(), ZoneId.systemDefault());
+        dateSelectEditText.setText(Utils.getCalendarFormatter().format(localDateTime));
         //Обновляем данные расписания
         recycleViewInit.loadApiData();
     }
@@ -207,6 +204,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Создание меню из XML
+     *
      * @param menu
      * @return
      */
@@ -217,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Обработка нажатий на меню
+     *
      * @param item
      * @return
      */
