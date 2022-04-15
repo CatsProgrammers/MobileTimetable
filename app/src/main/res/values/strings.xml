@@ -1,9 +1,0 @@
-<resources>
-    <string name="app_name">Расписание ФУ</string>
-    <string name="action_settings">Настройки</string>
-
-    <string-array name="user_types">
-        <item>Студент</item>
-        <item>Преподаватель</item>
-    </string-array>
-</resources>
