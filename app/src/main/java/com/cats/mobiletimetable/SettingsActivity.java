@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ public class SettingsActivity extends AppCompatActivity {
     List<String> userTypes;
     AutoCompleteTextView autoCompleteTextView;
     TextView criteriaTextView;
+    Button readyButton;
 
     Spinner spinner;
     AppDatabase db;
@@ -41,6 +43,10 @@ public class SettingsActivity extends AppCompatActivity {
         autoCompleteTextView = findViewById(R.id.autoCompleteTextView);
         spinner = findViewById(R.id.userTypeSpinner);
         criteriaTextView = findViewById(R.id.criteriaTextView);
+        readyButton = findViewById(R.id.readyButton);
+
+        View.OnClickListener readyButtonListener = this::readyButtonClicked;
+        readyButton.setOnClickListener(readyButtonListener);
 
         db = AppDatabase.getDbInstance(getApplicationContext());
         api = AppApi.getRuzApiInstance(getApplicationContext());
@@ -50,6 +56,10 @@ public class SettingsActivity extends AppCompatActivity {
         spinnerInit();
         spinnerBaseInit();
 
+    }
+
+    private void readyButtonClicked(View v) {
+        finish();
     }
 
     private void spinnerBaseInit() {
