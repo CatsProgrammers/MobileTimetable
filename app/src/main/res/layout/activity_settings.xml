@@ -16,8 +16,9 @@
         android:text="Выбранная группа:"
         android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/userTypeSpinner" />
 
     <AutoCompleteTextView
         android:id="@+id/autoCompleteTextView"
@@ -42,7 +43,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/autoCompleteTextView" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
         android:id="@+id/userTypeSpinner"
@@ -65,6 +66,6 @@
         android:text="Готово"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userTypeSpinner" />
+        app:layout_constraintTop_toBottomOf="@+id/autoCompleteTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
