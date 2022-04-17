@@ -26,6 +26,7 @@ import retrofit2.Response;
 
 public class TeacherRecycleViewInit extends AbstractRecycleViewInit {
 
+
     public TeacherRecycleViewInit(Context context, RecyclerView recyclerView, Calendar calendar) {
         super(context, recyclerView, calendar);
     }
@@ -35,7 +36,7 @@ public class TeacherRecycleViewInit extends AbstractRecycleViewInit {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.addItemDecoration(new DividerItemDecoration(context, 0));
-        lessonListAdapter = new LessonListAdapter(context);
+        lessonListAdapter = new LessonListAdapter((LessonListAdapter.LessonListener) context);
         recyclerView.setAdapter(lessonListAdapter);
 
     }

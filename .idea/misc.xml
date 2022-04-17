@@ -13,8 +13,8 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.2005" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.17901453896174352" />
         <entry key="app/src/main/res/layout/activity_settings.xml" value="0.23253358364903948" />
-        <entry key="app/src/main/res/layout/activity_teacher_info.xml" value="0.14175724637681159" />
-        <entry key="app/src/main/res/layout/lesson_view_item.xml" value="0.6419937133789063" />
+        <entry key="app/src/main/res/layout/activity_teacher_info.xml" value="0.24256596219712423" />
+        <entry key="app/src/main/res/layout/lesson_view_item.xml" value="0.1" />
         <entry key="app/src/main/res/layout/list_view_item.xml" value="0.2997716651772553" />
         <entry key="app/src/main/res/layout/spinner_item.xml" value="0.1" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.38016967773437504" />

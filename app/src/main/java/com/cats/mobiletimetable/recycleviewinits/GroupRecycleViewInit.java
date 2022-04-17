@@ -36,7 +36,7 @@ public class GroupRecycleViewInit extends AbstractRecycleViewInit {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.addItemDecoration(new DividerItemDecoration(context, 0));
-        lessonListAdapter = new LessonListAdapter(context);
+        lessonListAdapter = new LessonListAdapter((LessonListAdapter.LessonListener) context);
         recyclerView.setAdapter(lessonListAdapter);
     }
 

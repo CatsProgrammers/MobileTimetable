@@ -1,6 +1,7 @@
 package com.cats.mobiletimetable.adapters;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +24,10 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
 
     public List<LessonWithDetails> lessonList;
     private Context context;
+    private LessonListener lessonListener;
 
-    public LessonListAdapter(Context context) {
-        this.context = context;
+    public LessonListAdapter(LessonListener lessonListener) {
+        this.lessonListener = lessonListener;
     }
 
     public void setLessonList(List<LessonWithDetails> lessonList) {
@@ -36,8 +38,9 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        context = parent.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.lesson_view_item, parent, false);
-        return new MyViewHolder(view);
+        return new MyViewHolder(view, lessonListener);
     }
 
     @Override
@@ -57,6 +60,7 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
         holder.auditorium.setText(currentLesson.lesson.auditorium);
         holder.place.setText(currentLesson.building.label);
         holder.teacher.setText(currentLesson.teacher.name);
+        holder.teacher.setPaintFlags(holder.teacher.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         holder.timeBegin.setText(currentLesson.lesson.beginLesson);
         holder.timeEnd.setText(currentLesson.lesson.endLesson);
         holder.group.setText(currentLesson.lesson.stream);
@@ -83,6 +87,10 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
         return lessonList.size();
     }
 
+    public interface LessonListener {
+        void onTeacherLabelClick(int position);
+    }
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         LinearLayout headerLayout;
@@ -95,10 +103,12 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
         TextView timeBegin;
         TextView timeEnd;
         ImageView lessonTypeImage;
+        LessonListener lessonListener;
 
-        public MyViewHolder(View view) {
+        public MyViewHolder(View view, LessonListener lessonListener) {
             super(view);
 
+            this.lessonListener = lessonListener;
             headerLayout = view.findViewById(R.id.headerLayout);
             headerTextView = view.findViewById(R.id.headerTextView);
             title = view.findViewById(R.id.titleTextView);
@@ -110,6 +120,12 @@ public class LessonListAdapter extends RecyclerView.Adapter<LessonListAdapter.My
             timeEnd = view.findViewById(R.id.timeEndTextView);
             lessonTypeImage = view.findViewById(R.id.lessonTypeImageView);
 
+            View.OnClickListener teacherClickListener = this::teacherLabelClick;
+            teacher.setOnClickListener(teacherClickListener);
+        }
+
+        public void teacherLabelClick(View v) {
+            lessonListener.onTeacherLabelClick(getAdapterPosition());
         }
     }
 }

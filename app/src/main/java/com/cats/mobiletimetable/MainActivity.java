@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cats.mobiletimetable.adapters.LessonListAdapter;
 import com.cats.mobiletimetable.api.AppApi;
 import com.cats.mobiletimetable.api.FaApi;
 import com.cats.mobiletimetable.api.RuzApi;
@@ -37,7 +38,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LessonListAdapter.LessonListener {
 
     Calendar myCalendar = Calendar.getInstance();
     EditText dateSelectEditText;
@@ -220,4 +221,13 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public void onTeacherLabelClick(int position) {
+        Teacher currentTeacher = db.lessonDao().getAllLessonsWithDetails().get(position).teacher;
+        Intent intent = new Intent(this, TeacherInfoActivity.class);
+        intent.putExtra("name", currentTeacher.name);
+        intent.putExtra("email", currentTeacher.email);
+        intent.putExtra("rank", currentTeacher.rank);
+        startActivity(intent);
+    }
 }

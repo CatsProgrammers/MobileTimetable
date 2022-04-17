@@ -5,6 +5,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.cats.mobiletimetable.db.tables.Teacher;
 
@@ -22,6 +23,8 @@ public interface TeacherDao {
     @Query("SELECT * FROM teachers WHERE name=:name;")
     Teacher getTeacherByName(String name);
 
+    @Update
+    void updateTeacher(Teacher teacher);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Long insertTeacher(Teacher teacher);

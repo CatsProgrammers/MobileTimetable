@@ -43,7 +43,7 @@ public class SettingsActivity extends AppCompatActivity {
         autoCompleteTextView = findViewById(R.id.autoCompleteTextView);
         spinner = findViewById(R.id.userTypeSpinner);
         criteriaTextView = findViewById(R.id.criteriaTextView);
-        readyButton = findViewById(R.id.readyButton);
+        readyButton = findViewById(R.id.readySettingsButton);
 
         View.OnClickListener readyButtonListener = this::readyButtonClicked;
         readyButton.setOnClickListener(readyButtonListener);

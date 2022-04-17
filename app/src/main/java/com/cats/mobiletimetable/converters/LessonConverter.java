@@ -52,12 +52,21 @@ public class LessonConverter extends AbstractConverter<LessonResponseModel, Less
         //Работаем с преподавателем
         long teacherId;
         Teacher connectedTeacher = db.teacherDao().getTeacherByName(model.lecturerTitle);
+
         if (connectedTeacher == null) {
             Teacher teacher = new Teacher();
             teacher.name = model.lecturerTitle;
             teacher.rank = model.lecturerRank;
             teacher.email = model.lecturerEmail;
             teacherId = db.teacherDao().insertTeacher(teacher);
+        }
+        //Проверяем на такой костыль по e-mail т.к. при сиинхронизации проподавателей в MainActivity.syncTeachersApiData
+        // нам отдаются в том методе только имена и id, а email и rank мы обновляем у них уже тут
+        else if (connectedTeacher.email == null) {
+            connectedTeacher.rank = model.lecturerRank;
+            connectedTeacher.email = model.lecturerEmail;
+            db.teacherDao().updateTeacher(connectedTeacher);
+            teacherId = connectedTeacher.id;
         } else {
             teacherId = connectedTeacher.id;
         }
