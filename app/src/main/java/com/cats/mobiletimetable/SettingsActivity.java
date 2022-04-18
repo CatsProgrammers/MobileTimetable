@@ -1,5 +1,6 @@
 package com.cats.mobiletimetable;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.cats.mobiletimetable.api.AppApi;
 import com.cats.mobiletimetable.api.RuzApi;
@@ -19,6 +21,7 @@ import com.cats.mobiletimetable.converters.GroupConverter;
 import com.cats.mobiletimetable.converters.TeacherConverter;
 import com.cats.mobiletimetable.db.AppDatabase;
 import com.cats.mobiletimetable.db.tables.Setting;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,6 +32,7 @@ public class SettingsActivity extends AppCompatActivity {
     AutoCompleteTextView autoCompleteTextView;
     TextView criteriaTextView;
     Button readyButton;
+    SwitchMaterial themeSwitch;
 
     Spinner spinner;
     AppDatabase db;
@@ -44,6 +48,7 @@ public class SettingsActivity extends AppCompatActivity {
         spinner = findViewById(R.id.userTypeSpinner);
         criteriaTextView = findViewById(R.id.criteriaTextView);
         readyButton = findViewById(R.id.readySettingsButton);
+        themeSwitch = findViewById(R.id.themeSwitch);
 
         View.OnClickListener readyButtonListener = this::readyButtonClicked;
         readyButton.setOnClickListener(readyButtonListener);
@@ -53,9 +58,31 @@ public class SettingsActivity extends AppCompatActivity {
 
         userTypes = Arrays.asList(getResources().getStringArray(R.array.user_types));
 
+        switchInit();
         spinnerInit();
         spinnerBaseInit();
 
+    }
+
+    private void switchInit() {
+        themeSwitch.setChecked((getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES);
+        themeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                db.settingsDao().deleteItem(Utils.themeSettingsKey);
+                Setting setting = new Setting();
+                setting.name = Utils.themeSettingsKey;
+                setting.value = "dark";
+                db.settingsDao().insertItem(setting);
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                db.settingsDao().deleteItem(Utils.themeSettingsKey);
+                Setting setting = new Setting();
+                setting.name = Utils.themeSettingsKey;
+                setting.value = "light";
+                db.settingsDao().insertItem(setting);
+            }
+        });
     }
 
     private void readyButtonClicked(View v) {

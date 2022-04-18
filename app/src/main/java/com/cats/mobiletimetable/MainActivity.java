@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cats.mobiletimetable.adapters.LessonListAdapter;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements LessonListAdapter
     EditText dateSelectEditText;
     RecyclerView recyclerView;
 
+
     RuzApi ruzApi;
     FaApi faApi;
     AppDatabase db;
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements LessonListAdapter
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         dateSelectEditText = findViewById(R.id.dateEditText);
@@ -78,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements LessonListAdapter
         ruzApi = AppApi.getRuzApiInstance(getApplicationContext());
         faApi = AppApi.getFaApiInstance(getApplicationContext());
 
+        themeApply();
         apiDataSync();
         currentUserType = db.settingsDao().getItemByName(Utils.userTypeSettingsKey);
         recycleViewInit = RecycleViewCreator.createInstance(currentUserType, this, recyclerView, myCalendar);
@@ -91,6 +95,18 @@ public class MainActivity extends AppCompatActivity implements LessonListAdapter
                 }
         );
 
+    }
+
+    private void themeApply() {
+        Setting currentTheme = db.settingsDao().getItemByName(Utils.themeSettingsKey);
+        if (currentTheme != null) {
+            String currentThemeString = currentTheme.value;
+            if (currentThemeString.equals("dark")) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            }
+        }
     }
 
     /**

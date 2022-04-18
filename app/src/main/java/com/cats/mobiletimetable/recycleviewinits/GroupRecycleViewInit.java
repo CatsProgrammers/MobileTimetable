@@ -98,8 +98,6 @@ public class GroupRecycleViewInit extends AbstractRecycleViewInit {
 
                     loadRecordList();
 
-                    Toast.makeText(context, "Успешно обновил расписание", Toast.LENGTH_SHORT).show();
-
                 } else {
                     Toast.makeText(context, "Server returned an error", Toast.LENGTH_SHORT).show();
                 }

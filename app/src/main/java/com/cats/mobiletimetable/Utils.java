@@ -16,6 +16,8 @@ public class Utils {
 
     public final static String timeSyncSettingsKey = "apiTimeSync";
 
+    public final static String themeSettingsKey = "currentAppTheme";
+
     /**
      * Форматер для API, отдает форматированные даты
      *
