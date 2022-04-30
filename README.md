@@ -16,4 +16,4 @@ Timetable by teacher (dark)               |  Settings activity (dark)
 ![](https://github.com/CatsProgrammers/MobileTimetable/blob/img/img/image4.png)  |  ![](https://github.com/CatsProgrammers/MobileTimetable/blob/img/img/image3.png)
 
 ### Download
-Apk is available [here](https://github.com/CatsProgrammers/MobileTimetable/releases/download/1.0.1/Timetable.apk)
+Apk is available [here](https://github.com/CatsProgrammers/MobileTimetable/releases/download/1.0.1/MobileTimetable.apk)
